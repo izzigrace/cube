@@ -39,7 +39,7 @@
 .gradientLeftPic {
   position: absolute;
   height: 750px;
-  margin-left: -600px;
+  margin-left: -550px;
   margin-right: 500px;
   margin-top: -50px;
 }
@@ -47,7 +47,7 @@
 .gradientRightPic {
   position: absolute;
   float: right;
-  margin-left: 900px;
+  margin-left: 850px;
   margin-top: -50px;
   height: 750px;
   z-index: 100;
