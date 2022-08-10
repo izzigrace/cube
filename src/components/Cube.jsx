@@ -36,6 +36,7 @@ class Cube extends React.Component {
   }
 
   componentDidMount() {
+    let {sin, cos, PI, max, min, abs} = Math;
     //make and render scene
     var scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
@@ -65,10 +66,6 @@ class Cube extends React.Component {
     controls.maxPolarAngle = Math.PI / 2;
     controls.autoRotate = false;
 
-    //make raycaster
-    const mouse = new THREE.Vector2();
-    const raycaster = new THREE.Raycaster();
-
     function onWindowResize (event) {
       let width = (window.innerWidth)|0;
       let height = (window.innerHeight)|0;
@@ -79,18 +76,49 @@ class Cube extends React.Component {
     onWindowResize();
     window.addEventListener('resize', onWindowResize, false);
 
+
+    //make raycaster
+    const mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+
     window.addEventListener('click', (event) => {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(scene);
-      console.log(intersects);
+      console.log(intersects[0]);
       // console.log(scene.children);
 
+      console.log(intersects[0].point);
       for (let i = 0; i < intersects.length; i++) {
-        intersects[ 0 ].object.material.color.set( 0xff0000 );
+        intersects[0].object.material.color.set( 0xff0000 );
       }
+
+      //.face.normal
+
+      var facePoint = intersects[0].point;
+      var raycaster2 = new THREE.Raycaster();
+      console.log('raycaster', raycaster2);
+      raycaster2.ray.origin.copy(facePoint);
+      raycaster2.ray.direction.copy(intersects[0].face.normal).multiplyScalar(-1); //.applyQuaternion(intersects[0].object.quaternion); //scalar = floating point number. multiplies xyz by -1 //quaternion stores rotations
+      const intersects2 = raycaster2.intersectObject(scene);
+      console.log('intersects2', intersects2[1]);
+      for (let i = 0; i < intersects2.length; i++) {
+        intersects2[i].object.material.color.set( 0xff0000 );
+      }
+      console.log(intersects[0].face.normal);
+
+      let clickPoint = facePoint;
+      let clickAxis='';
+      let abc = new THREE.Vector3(abs(clickPoint.x),abs(clickPoint.y),abs(clickPoint.z))
+      if((abc.x>abc.y)&&(abc.x>abc.z))clickAxis = (clickPoint.x<0) ? "-X" : "+X";// Clicked the X axis...
+      if((abc.y>abc.x)&&(abc.y>abc.z))clickAxis = (clickPoint.y<0) ? "-Y" : "+Y"; // Clicked the Y axis...
+      if((abc.z>abc.x)&&(abc.z>abc.y))clickAxis = (clickPoint.z<0) ? "-Z" : "+Z"; // Clicked the Z axis...
+
+      console.log('abc', abc);
+      console.log('click axis', clickAxis);
+
     });
 
 
