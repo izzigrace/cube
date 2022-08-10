@@ -40,7 +40,7 @@ html, body {
   float: right;
 }
 
-.gradientLeftPic {
+/* .gradientLeftPic {
   position: absolute;
   height: 750px;
   margin-left: -550px;
@@ -55,4 +55,4 @@ html, body {
   margin-top: -50px;
   height: 750px;
   z-index: 100;
-}
+} */

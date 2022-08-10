@@ -1,8 +1,8 @@
 import React from 'react';
 import Cube from './Cube.jsx';
 import style from './App.module.css';
-import gradientLeft from '../pics/1.png';
-import gradientRight from '../pics/2.png';
+// import gradientLeft from '../pics/1.png';
+// import gradientRight from '../pics/2.png';
 
 
 
@@ -18,12 +18,12 @@ class App extends React.Component {
         <div className={style.allButtons}>
           <button className={style.shuffle}>SHUFFLE</button>
           <button className={style.solve}>SOLVE</button>
-          <button className={style.startTimer}>START TIMER</button>
+          <button className={style.startTimer} onClick={this.timer} >START TIMER</button>
         </div>
         <Cube />
         <div>
-          <img src={gradientLeft} className={style.gradientLeftPic} alt="gradient background"></img>
-          <img src={gradientRight} className={style.gradientRightPic} alt="gradient background"></img>
+          {/* <img src={gradientLeft} className={style.gradientLeftPic} alt="gradient background"></img> */}
+          {/* <img src={gradientRight} className={style.gradientRightPic} alt="gradient background"></img> */}
         </div>
       </div>
     )

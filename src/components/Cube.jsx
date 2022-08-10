@@ -40,7 +40,7 @@ class Cube extends React.Component {
     var scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
 
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
@@ -69,17 +69,27 @@ class Cube extends React.Component {
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
 
+    function onWindowResize (event) {
+      let width = (window.innerWidth)|0;
+      let height = (window.innerHeight)|0;
+      renderer.setSize(width, height, true);
+      camera.aspect = width/height;
+      camera.updateProjectionMatrix();
+    }
+    onWindowResize();
+    window.addEventListener('resize', onWindowResize, false);
+
     window.addEventListener('click', (event) => {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(scene, false );
+      const intersects = raycaster.intersectObject(scene);
       console.log(intersects);
       // console.log(scene.children);
 
       for (let i = 0; i < intersects.length; i++) {
-        intersects[ i ].object.material.color.set( 0xff0000 );
+        intersects[ 0 ].object.material.color.set( 0xff0000 );
       }
     });
 
