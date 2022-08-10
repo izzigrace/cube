@@ -36,6 +36,7 @@ class Cube extends React.Component {
   }
 
   componentDidMount() {
+    //make and render scene
     var scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
 
@@ -43,21 +44,9 @@ class Cube extends React.Component {
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
+    //make and position camera
     var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-    camera.position.set( 0, 12, 2 );
-    // camera.up.set(1, 1, 0);
-    // camera.lookAt(new THREE.Vector3(0, 0, 0));
-    // camera.position = new THREE.Vector3(-20, 20, 30);
-    // camera.lookAt(scene.position);
-    // camera.position.z = 15;
-
-    var controls = new OrbitControls( camera, renderer.domElement );
-    controls.enableZoom = false;
-    controls.enablePan = false;
-    controls.enableRotate = true;
-    controls.minPolarAngle = Math.PI / 2;
-    controls.maxPolarAngle = Math.PI / 2;
-    controls.autoRotate = false;
+    camera.position.set( 0, 12, 0 );
 
     //make lights
     const ambientLight = new THREE.AmbientLight( 0xffffff, 2 );
@@ -65,14 +54,42 @@ class Cube extends React.Component {
     const directLight = new THREE.DirectionalLight(0xffffff, 2);
     directLight.position.set(  0, 1, 2  );
     scene.add(directLight);
-    //
 
+
+    //set orbit controls
+    var controls = new OrbitControls( camera, renderer.domElement );
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.enableRotate = false;
+    controls.minPolarAngle = Math.PI / 2;
+    controls.maxPolarAngle = Math.PI / 2;
+    controls.autoRotate = false;
+
+    //make raycaster
+    const mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+
+    window.addEventListener('click', (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(scene, false );
+      console.log(intersects);
+      // console.log(scene.children);
+
+      for (let i = 0; i < intersects.length; i++) {
+        intersects[ i ].object.material.color.set( 0xff0000 );
+      }
+    });
+
+
+    //make group of mini cubes
     const wholeCube = new THREE.Group();
     //start of rendering TWENTY SEVEN CUBES
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(singlecube1, function(gltf) {
       let cube1 = gltf.scene;
-      // scene.add(cube1);
       wholeCube.add(cube1);
     });
     gltfLoader.load(singlecube2, function(gltf) {
@@ -175,20 +192,17 @@ class Cube extends React.Component {
       let cube26 = gltf.scene;
       wholeCube.add(cube26);
     });
-    //ending finally
+    //ending mini cubes finally and adding group of all of them to scene
     scene.add(wholeCube);
-    wholeCube.position.set(-2, 0, -2);
+    wholeCube.position.set(0, 1, 0);
 
-    console.log(scene.children);
-    // wholeCube.translate( 0, 0, 0 );
-    // wholeCube.center();
 
+    //rotate on mouse scroll
     window.addEventListener('wheel', onMouseWheel, false);
     function onMouseWheel (event) {
-      event.preventDefault();
-      wholeCube.rotation.y += event.deltaX * 0.01;
-      wholeCube.rotation.x += event.deltaY * 0.01;
-      // camera.rotation.y -= event.deltaY * 0.00005;
+      // event.preventDefault();
+      wholeCube.rotation.y += (event.deltaX) * 0.008;
+      wholeCube.rotation.x += (event.deltaY) * 0.008;
     }
 
     function animate() {

@@ -1,9 +1,8 @@
 import React from 'react';
-// import { Canvas } from '@react-three-fiber';
 import Cube from './Cube.jsx';
 import style from './App.module.css';
 import gradientLeft from '../pics/1.png';
-// import gradientRight from '../pics/2.png';
+import gradientRight from '../pics/2.png';
 
 
 
@@ -24,7 +23,7 @@ class App extends React.Component {
         <Cube />
         <div>
           <img src={gradientLeft} className={style.gradientLeftPic} alt="gradient background"></img>
-          {/* <img src={gradientRight} className={style.gradientRightPic} alt="gradient background"></img> */}
+          <img src={gradientRight} className={style.gradientRightPic} alt="gradient background"></img>
         </div>
       </div>
     )
