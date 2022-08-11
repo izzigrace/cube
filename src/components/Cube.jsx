@@ -36,7 +36,7 @@ class Cube extends React.Component {
   }
 
   componentDidMount() {
-    let { abs } = Math;
+    let { abs, PI } = Math;
     //make and render scene
     var scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
@@ -172,11 +172,14 @@ class Cube extends React.Component {
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
     var mouseLocOnDown = {x: null, y: null};
-    // var yAxisGroup = new THREE.Group();
-    // var xAxisGroup = new THREE.Group();
+    var yAxisGroup = [];
+    var xAxisGroup = [];
 
     window.addEventListener('mousedown', (event) => {
       if (mouseOnCube) {
+
+        xAxisGroup = [];
+        yAxisGroup = [];
 
         //set mouse location
         mouseLocOnDown.x = event.clientX;
@@ -194,14 +197,9 @@ class Cube extends React.Component {
       // }
       // controls.enabled = false;
       // console.log(scene.children);
-      for (let i = 0; i < intersects[0].object.parent.children.length; i++) {
-        intersects[0].object.parent.children[i].material.color.set(0xff0000);
-      }
-      intersects[0].object.material.color.set(0xff0000);
-      // xAxisGroup.attach(intersects[0].object.parent);
-      // yAxisGroup.attach(intersects[0].object.parent);
 
-      //.face.normal
+      xAxisGroup.push(intersects[0].object.parent);
+      yAxisGroup.push(intersects[0].object.parent);
 
       var facePoint = intersects[0].point;
 
@@ -222,10 +220,9 @@ class Cube extends React.Component {
       raycaster2.ray.direction.copy(intersects[0].face.normal).multiplyScalar(-1); //.applyQuaternion(intersects[0].object.quaternion); //scalar = floating point number. multiplies xyz by -1 //quaternion stores rotations
       const intersects2 = raycaster2.intersectObject(scene);
 
-      console.log('ncdjsnvjcfdinjvife', (intersects[0].face.normal).multiplyScalar(-1))
-
       for (let i = 0; i < intersects2.length; i++) {
-        intersects2[i].object.material.color.set( 0xff0000 );
+        xAxisGroup.push(intersects2[i].object.parent);
+        yAxisGroup.push(intersects2[i].object.parent);
         // var raycaster3
       }
       // console.log(intersects[0].face.normal);
@@ -236,7 +233,7 @@ class Cube extends React.Component {
       raycaster3.ray.direction.copy({x: 0, y: -1, z: 0});
       const intersects3 = raycaster3.intersectObject(scene);
       for (let i = 0; i < intersects3.length; i ++) {
-        intersects3[i].object.material.color.set( 0xff0000 );
+        yAxisGroup.push(intersects3[i].object.parent);
       }
 
       var raycaster4 = new THREE.Raycaster();
@@ -244,7 +241,7 @@ class Cube extends React.Component {
       raycaster4.ray.direction.copy({x: 0, y: -1, z: 0});
       const intersects4 = raycaster4.intersectObject(scene);
       for (let i = 0; i < intersects4.length; i ++) {
-        intersects4[i].object.material.color.set( 0xff0000 );
+        yAxisGroup.push(intersects4[i].object.parent);
       }
 
       var raycaster5 = new THREE.Raycaster();
@@ -252,7 +249,7 @@ class Cube extends React.Component {
       raycaster5.ray.direction.copy({x: 0, y: -1, z: 0});
       const intersects5 = raycaster5.intersectObject(scene);
       for (let i = 0; i < intersects5.length; i ++) {
-        intersects5[i].object.material.color.set( 0xff0000 );
+        yAxisGroup.push(intersects5[i].object.parent);
       }
 
       //make raycaster for each cube that was selected from last raycaster,  X AXIS CUBES
@@ -261,7 +258,7 @@ class Cube extends React.Component {
       raycaster6.ray.direction.copy({x: -1, y: 0, z: 0});
       const intersects6 = raycaster6.intersectObject(scene);
       for (let i = 0; i < intersects6.length; i ++) {
-        intersects6[i].object.material.color.set( 0xff0000 );
+        xAxisGroup.push(intersects6[i].object.parent);
       }
 
       var raycaster7 = new THREE.Raycaster();
@@ -269,7 +266,7 @@ class Cube extends React.Component {
       raycaster7.ray.direction.copy({x: -1, y: 0, z: 0});
       const intersects7 = raycaster7.intersectObject(scene);
       for (let i = 0; i < intersects7.length; i ++) {
-        intersects7[i].object.material.color.set( 0xff0000 );
+        xAxisGroup.push(intersects7[i].object.parent);
       }
 
       var raycaster8 = new THREE.Raycaster();
@@ -277,15 +274,54 @@ class Cube extends React.Component {
       raycaster8.ray.direction.copy({x: -1, y: 0, z: 0});
       const intersects8 = raycaster8.intersectObject(scene);
       for (let i = 0; i < intersects8.length; i ++) {
-        intersects8[i].object.material.color.set( 0xff0000 );
+        xAxisGroup.push(intersects8[i].object.parent);
       }
 
-
     }
+    console.log(xAxisGroup);
+    console.log(yAxisGroup);
     });
     //make group at (0, 0) attach cubes to them, rotate, then attach them back to the parent
 
+    var rotateGroup = new THREE.Group();
+    scene.add(rotateGroup);
+    rotateGroup.position.set(0, 1, 0);
+    var rotationTargetGroup = new THREE.Group();
+    rotationTargetGroup.position.set(0, 1, 0);
+    var isAnimating = false;
 
+    window.addEventListener('mouseup', (event) => {
+      console.log(upDownLeftOrRight);
+      if (upDownLeftOrRight === 'right') {
+        for (let i = 0; i < xAxisGroup.length; i++) {
+          rotateGroup.attach(xAxisGroup[i]);
+        }
+        rotationTargetGroup.rotation.y += PI / 2;
+        isAnimating = true;
+      }
+      if (upDownLeftOrRight === 'left') {
+        for (let i = 0; i < xAxisGroup.length; i++) {
+          rotateGroup.attach(xAxisGroup[i]);
+        }
+        rotationTargetGroup.rotation.y -= PI / 2;
+        isAnimating = true;
+      }
+
+      if (upDownLeftOrRight === 'up') {
+        for (let i = 0; i < yAxisGroup.length; i++) {
+          rotateGroup.attach(yAxisGroup[i]);
+        }
+        rotationTargetGroup.rotation.x -= PI / 2;
+        isAnimating = true;
+      }
+      if (upDownLeftOrRight === 'down') {
+        for (let i = 0; i < yAxisGroup.length; i++) {
+          rotateGroup.attach(yAxisGroup[i]);
+        }
+        rotationTargetGroup.rotation.x += PI / 2;
+        isAnimating = true;
+      }
+    })
 
 
     //make group of mini cubes
@@ -403,8 +439,12 @@ class Cube extends React.Component {
 
     function animate() {
       requestAnimationFrame( animate );
-      renderer.render( scene, camera );
+      if (isAnimating) {
+        rotateGroup.quaternion.slerp(rotationTargetGroup.quaternion, 0.1);
+      }
+
       controls.update();
+      renderer.render( scene, camera );
     }
     animate();
   }
