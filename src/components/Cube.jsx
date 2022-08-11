@@ -36,7 +36,7 @@ class Cube extends React.Component {
   }
 
   componentDidMount() {
-    let {sin, cos, PI, max, min, abs} = Math;
+    let { abs } = Math;
     //make and render scene
     var scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
@@ -61,11 +61,12 @@ class Cube extends React.Component {
     var controls = new OrbitControls( camera, renderer.domElement );
     controls.enableZoom = false;
     controls.enablePan = false;
-    controls.enableRotate = false;
-    controls.minPolarAngle = Math.PI / 2;
-    controls.maxPolarAngle = Math.PI / 2;
+    controls.enableRotate = true;
+    // controls.minPolarAngle = Math.PI / 2;
+    // controls.maxPolarAngle = Math.PI / 2;
     controls.autoRotate = false;
 
+    //window resizing
     function onWindowResize (event) {
       let width = (window.innerWidth)|0;
       let height = (window.innerHeight)|0;
@@ -76,51 +77,151 @@ class Cube extends React.Component {
     onWindowResize();
     window.addEventListener('resize', onWindowResize, false);
 
+    // window.addEventListener('pointerup', (event) => {
+    //   controls.enabled = false;
+    // })
+
+    //rotate on mouse scroll
+    // window.addEventListener('wheel', onMouseWheel, false);
+    // function onMouseWheel (event) {
+    //   // event.preventDefault();
+    //   wholeCube.rotation.y += (event.deltaX) * 0.008;
+    //   wholeCube.rotation.x += (event.deltaY) * 0.008;
+    // } sadly had to get rid of this
+
+
+  //   function getContainerObjByChild (child) {
+  //     if (child.userData.isContainer) {
+  //       return child;
+  //     }
+
+  //     else if(child.parent != null) {
+  //       return getContainerObjByChild(child.parent);
+  //     }
+
+  //     else {
+  //       return null;
+  //     }
+  //  }
+
+  function isCursorOnCube (cursorX, cursorY) {
+    var directionVector = new THREE.Vector3();
+
+    //Normalise mouse x and y
+    var x = (cursorX / (window.innerWidth)|0) * 2 - 1;
+    var y = -(cursorY / (window.innerHeight)|0) * 2 + 1;
+
+    directionVector.set(x, y, 1);
+
+    // projector.unprojectVector(directionVector, camera);
+    directionVector.sub(camera.position);
+    directionVector.normalize();
+    raycaster.set(camera.position, directionVector);
+
+    return raycaster.intersectObjects(wholeCube, true).length > 0;
+  }
+
+
+  const wholeCubeRaycaster = new THREE.Raycaster();
+
+  var mouseOnCube = false;
+  window.addEventListener('mousemove', (event) => {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    wholeCubeRaycaster.setFromCamera(mouse, camera);
+    const intersectsCube = wholeCubeRaycaster.intersectObject(scene);
+    if (intersectsCube.length === 0) {
+      controls.enableRotate = true;
+      mouseOnCube = false;
+    } else {
+      controls.enableRotate = false;
+      mouseOnCube = true;
+    }
+  })
 
     //make raycaster
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
 
     window.addEventListener('click', (event) => {
+      if (mouseOnCube) {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(scene);
-      console.log(intersects[0]);
-      // console.log(scene.children);
 
-      console.log(intersects[0].point);
-      for (let i = 0; i < intersects.length; i++) {
-        intersects[0].object.material.color.set( 0xff0000 );
+      // controls.enabled = true;
+      // if (intersects.length === 0) {
+      //   return;
+      // }
+      // controls.enabled = false;
+      // console.log(scene.children);
+      for (let i = 0; i < intersects[0].object.parent.children.length; i++) {
+        intersects[0].object.parent.children[i].material.color.set(0xff0000);
       }
+      intersects[0].object.material.color.set(0xff0000);
+      console.log('world local', intersects[0].object.parent.worldToLocal(intersects[0].point.clone()))
+      console.log('intersects[0]', intersects[0]);
+      console.log('intersects[0].object ', intersects[0].object);
 
       //.face.normal
 
       var facePoint = intersects[0].point;
+
+
+      let clickPoint = wholeCube.worldToLocal(facePoint.clone());
+      let clickAxis='';
+      let abc = new THREE.Vector3(abs(clickPoint.x),abs(clickPoint.y),abs(clickPoint.z))
+      if ((abc.x>abc.y)&&(abc.x>abc.z)) clickAxis = (clickPoint.x<0) ? "-X" : "+X"; // Clicked the X axis
+      if ((abc.y>abc.x)&&(abc.y>abc.z)) clickAxis = (clickPoint.y<0) ? "-Y" : "+Y"; // Clicked the Y axis
+      if ((abc.z>abc.x)&&(abc.z>abc.y)) clickAxis = (clickPoint.z<0) ? "-Z" : "+Z"; // Clicked the Z axis
+
+      // console.log('abc', abc);
+      // console.log('click axis', clickAxis);
+
+      //making raycaster FROM what was clicked
       var raycaster2 = new THREE.Raycaster();
-      console.log('raycaster', raycaster2);
       raycaster2.ray.origin.copy(facePoint);
       raycaster2.ray.direction.copy(intersects[0].face.normal).multiplyScalar(-1); //.applyQuaternion(intersects[0].object.quaternion); //scalar = floating point number. multiplies xyz by -1 //quaternion stores rotations
       const intersects2 = raycaster2.intersectObject(scene);
-      console.log('intersects2', intersects2[1]);
+
+      console.log('ncdjsnvjcfdinjvife', (intersects[0].face.normal).multiplyScalar(-1))
+
       for (let i = 0; i < intersects2.length; i++) {
         intersects2[i].object.material.color.set( 0xff0000 );
+        // var raycaster3
       }
-      console.log(intersects[0].face.normal);
+      // console.log(intersects[0].face.normal);
 
-      let clickPoint = facePoint;
-      let clickAxis='';
-      let abc = new THREE.Vector3(abs(clickPoint.x),abs(clickPoint.y),abs(clickPoint.z))
-      if((abc.x>abc.y)&&(abc.x>abc.z))clickAxis = (clickPoint.x<0) ? "-X" : "+X";// Clicked the X axis...
-      if((abc.y>abc.x)&&(abc.y>abc.z))clickAxis = (clickPoint.y<0) ? "-Y" : "+Y"; // Clicked the Y axis...
-      if((abc.z>abc.x)&&(abc.z>abc.y))clickAxis = (clickPoint.z<0) ? "-Z" : "+Z"; // Clicked the Z axis...
+      var raycaster3 = new THREE.Raycaster();
+      raycaster3.ray.origin.copy(intersects2[0].point);
+      raycaster3.ray.direction.copy({x: 0, y: -1, z: 0});
+      const intersects3 = raycaster3.intersectObject(scene);
+      for (let i = 0; i < intersects3.length; i ++) {
+        intersects3[i].object.material.color.set( 0xff0000 );
+      }
 
-      console.log('abc', abc);
-      console.log('click axis', clickAxis);
+      var raycaster4 = new THREE.Raycaster();
+      raycaster4.ray.origin.copy(intersects2[3].point);
+      raycaster4.ray.direction.copy({x: 0, y: -1, z: 0});
+      const intersects4 = raycaster4.intersectObject(scene);
+      for (let i = 0; i < intersects4.length; i ++) {
+        intersects4[i].object.material.color.set( 0xff0000 );
+      }
 
+      var raycaster5 = new THREE.Raycaster();
+      raycaster5.ray.origin.copy(intersects2[5].point);
+      raycaster5.ray.direction.copy({x: 0, y: -1, z: 0});
+      const intersects5 = raycaster5.intersectObject(scene);
+      for (let i = 0; i < intersects5.length; i ++) {
+        intersects5[i].object.material.color.set( 0xff0000 );
+      }
+
+
+    }
     });
-
+    //make group at (0, 0) attach cubes to them, rotate, then attach them back to the parent
 
     //make group of mini cubes
     const wholeCube = new THREE.Group();
@@ -234,14 +335,6 @@ class Cube extends React.Component {
     scene.add(wholeCube);
     wholeCube.position.set(0, 1, 0);
 
-
-    //rotate on mouse scroll
-    window.addEventListener('wheel', onMouseWheel, false);
-    function onMouseWheel (event) {
-      // event.preventDefault();
-      wholeCube.rotation.y += (event.deltaX) * 0.008;
-      wholeCube.rotation.x += (event.deltaY) * 0.008;
-    }
 
     function animate() {
       requestAnimationFrame( animate );
