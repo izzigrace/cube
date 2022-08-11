@@ -125,7 +125,13 @@ class Cube extends React.Component {
   const wholeCubeRaycaster = new THREE.Raycaster();
 
   var mouseOnCube = false;
+  // var mouseMoveDirection = {x: null, y: null};
+  var leftOrRight = '';
+  var upOrDown = '';
+  var upDownLeftOrRight = '';
+
   window.addEventListener('mousemove', (event) => {
+    //seeing if mouse is over cube, disabling orbit controls if it is
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     wholeCubeRaycaster.setFromCamera(mouse, camera);
@@ -137,14 +143,45 @@ class Cube extends React.Component {
       controls.enableRotate = false;
       mouseOnCube = true;
     }
+
+    //setting last position of mouse
+    leftOrRight = (
+      event.clientX > mouseLocOnDown.x ? 'right'
+      : event.clientX < mouseLocOnDown.x ? 'left'
+      : 'none'
+    );
+    upOrDown = (
+      event.clientY > mouseLocOnDown.y ? 'down'
+      : event.clientY < mouseLocOnDown.y ? 'up'
+      : 'none'
+    );
+
+    mouseLocOnDown.x = event.clientX;
+    mouseLocOnDown.y = event.clientY;
+
+    if (upOrDown === 'none') {
+      upDownLeftOrRight = leftOrRight;
+    }
+    if (leftOrRight === 'none') {
+      upDownLeftOrRight = upOrDown;
+    }
+
   })
 
     //make raycaster
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
+    var mouseLocOnDown = {x: null, y: null};
+    // var yAxisGroup = new THREE.Group();
+    // var xAxisGroup = new THREE.Group();
 
-    window.addEventListener('click', (event) => {
+    window.addEventListener('mousedown', (event) => {
       if (mouseOnCube) {
+
+        //set mouse location
+        mouseLocOnDown.x = event.clientX;
+        mouseLocOnDown.y = event.clientY;
+
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -161,9 +198,8 @@ class Cube extends React.Component {
         intersects[0].object.parent.children[i].material.color.set(0xff0000);
       }
       intersects[0].object.material.color.set(0xff0000);
-      console.log('world local', intersects[0].object.parent.worldToLocal(intersects[0].point.clone()))
-      console.log('intersects[0]', intersects[0]);
-      console.log('intersects[0].object ', intersects[0].object);
+      // xAxisGroup.attach(intersects[0].object.parent);
+      // yAxisGroup.attach(intersects[0].object.parent);
 
       //.face.normal
 
@@ -194,6 +230,7 @@ class Cube extends React.Component {
       }
       // console.log(intersects[0].face.normal);
 
+      //make raycaster for each cube that was selected from last raycaster,  Y AXIS CUBES
       var raycaster3 = new THREE.Raycaster();
       raycaster3.ray.origin.copy(intersects2[0].point);
       raycaster3.ray.direction.copy({x: 0, y: -1, z: 0});
@@ -203,7 +240,7 @@ class Cube extends React.Component {
       }
 
       var raycaster4 = new THREE.Raycaster();
-      raycaster4.ray.origin.copy(intersects2[3].point);
+      raycaster4.ray.origin.copy(intersects2[2].point);
       raycaster4.ray.direction.copy({x: 0, y: -1, z: 0});
       const intersects4 = raycaster4.intersectObject(scene);
       for (let i = 0; i < intersects4.length; i ++) {
@@ -211,17 +248,45 @@ class Cube extends React.Component {
       }
 
       var raycaster5 = new THREE.Raycaster();
-      raycaster5.ray.origin.copy(intersects2[5].point);
+      raycaster5.ray.origin.copy(intersects2[4].point);
       raycaster5.ray.direction.copy({x: 0, y: -1, z: 0});
       const intersects5 = raycaster5.intersectObject(scene);
       for (let i = 0; i < intersects5.length; i ++) {
         intersects5[i].object.material.color.set( 0xff0000 );
       }
 
+      //make raycaster for each cube that was selected from last raycaster,  X AXIS CUBES
+      var raycaster6 = new THREE.Raycaster();
+      raycaster6.ray.origin.copy(intersects2[0].point);
+      raycaster6.ray.direction.copy({x: -1, y: 0, z: 0});
+      const intersects6 = raycaster6.intersectObject(scene);
+      for (let i = 0; i < intersects6.length; i ++) {
+        intersects6[i].object.material.color.set( 0xff0000 );
+      }
+
+      var raycaster7 = new THREE.Raycaster();
+      raycaster7.ray.origin.copy(intersects2[2].point);
+      raycaster7.ray.direction.copy({x: -1, y: 0, z: 0});
+      const intersects7 = raycaster7.intersectObject(scene);
+      for (let i = 0; i < intersects7.length; i ++) {
+        intersects7[i].object.material.color.set( 0xff0000 );
+      }
+
+      var raycaster8 = new THREE.Raycaster();
+      raycaster8.ray.origin.copy(intersects2[4].point);
+      raycaster8.ray.direction.copy({x: -1, y: 0, z: 0});
+      const intersects8 = raycaster8.intersectObject(scene);
+      for (let i = 0; i < intersects8.length; i ++) {
+        intersects8[i].object.material.color.set( 0xff0000 );
+      }
+
 
     }
     });
     //make group at (0, 0) attach cubes to them, rotate, then attach them back to the parent
+
+
+
 
     //make group of mini cubes
     const wholeCube = new THREE.Group();
