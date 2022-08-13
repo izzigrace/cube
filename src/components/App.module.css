@@ -43,3 +43,9 @@ html, body {
 .timeAndButtonContainer {
   float: right;
 }
+
+.soundButton {
+  padding-left: 10px;
+  background: none;
+  border: none;
+}

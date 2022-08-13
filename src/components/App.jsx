@@ -14,9 +14,11 @@ class App extends React.Component {
       modal: false,
       seconds: 0,
       minutes: 0,
+      playSound: true
     }
     this.timer = this.timer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
+    this.sound = this.sound.bind(this);
   }
 
   // startAndStopTimer (event) {
@@ -41,7 +43,7 @@ class App extends React.Component {
   timer (event) {
     event.preventDefault();
     this.setState({startTimer: true});
-    setInterval(() => {
+    var interval = setInterval(() => {
       if (this.state.seconds === 59) {
         this.setState({seconds: 0});
         this.setState({minutes: this.state.minutes + 1});
@@ -50,6 +52,9 @@ class App extends React.Component {
         seconds: this.state.seconds + 1
       })
     }, 1000);
+    if (this.startTimer === false) {
+      clearInterval()
+    }
   }
 
   stopTimer (event) {
@@ -58,10 +63,16 @@ class App extends React.Component {
     this.setState({modal: true});
   }
 
+  sound (event) {
+    event.preventDefault();
+    this.setState({playSound: (!this.state.playSound)});
+  }
+
 
   render() {
     var timerButton;
     var modalPopUp;
+    var soundButtonName;
 
     if (this.state.startTimer) {
       timerButton = <button className={style.startTimer} onClick={this.stopTimer} >STOP TIMER</button>;
@@ -84,17 +95,24 @@ class App extends React.Component {
       modalPopUp = <div></div>
     }
 
+    if (this.state.playSound) {
+      soundButtonName = 'sound off';
+    } else {
+      soundButtonName = 'sound on';
+    }
+
     return (
       <div className={style.app} >
         <div className={style.allButtons}>
           <button className={style.shuffle}>SHUFFLE</button>
           <button className={style.solve}>SOLVE</button>
+          <button className={style.soundButton} onClick={this.sound}>{soundButtonName}</button>
           <div className={style.timeAndButtonContainer}>
             {this.state.minutes + ':' + this.state.seconds}
             {timerButton}
           </div>
         </div>
-        <Cube />
+        <Cube sound={this.state.playSound}/>
         {/* {modalPopUp} */}
       </div>
     )

@@ -2,6 +2,10 @@ import React from 'react';
 import * as THREE from "three";
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
+import sound from '../models/cube sound.mp3';
+import sound2 from '../models/cube sound2.mp3';
+import sound3 from '../models/cube sound3.mp3';
+import sound4 from '../models/cube sound4.mp3';
 import singlecube1 from '../models/singlecube1.gltf';
 import singlecube2 from '../models/singlecube2.gltf';
 import singlecube3 from '../models/singlecube3.gltf';
@@ -37,6 +41,11 @@ class Cube extends React.Component {
 
   componentDidMount() {
     let { abs, PI } = Math;
+    var cubeSound = new Audio(sound);
+    var cubeSound2 = new Audio(sound2);
+    var cubeSound3 = new Audio(sound3);
+    var cubeSound4 = new Audio(sound4);
+
     //make and render scene
     var scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
@@ -289,6 +298,9 @@ class Cube extends React.Component {
 
       if (upDownLeftOrRight === 'right') {
         console.log('RIGHT');
+        if (this.props.sound) {
+          cubeSound2.play();
+        }
         for (let i = 0; i < xAxisGroup.length; i++) {
           rotateGroup.attach(xAxisGroup[i]);
         }
@@ -301,7 +313,9 @@ class Cube extends React.Component {
         isAnimating = true;
       }
       if (upDownLeftOrRight === 'left') {
-        console.log('LEFT');
+        if (this.props.sound) {
+          cubeSound4.play();
+        }
         for (let i = 0; i < xAxisGroup.length; i++) {
           rotateGroup.attach(xAxisGroup[i]);
         }
@@ -314,7 +328,9 @@ class Cube extends React.Component {
       }
 
       if (upDownLeftOrRight === 'up') {
-        console.log('UP');
+        if (this.props.sound) {
+          cubeSound2.play();
+        }
         for (let i = 0; i < yAxisGroup.length; i++) {
           rotateGroup.attach(yAxisGroup[i]);
         }
@@ -326,7 +342,9 @@ class Cube extends React.Component {
         isAnimating = true;
       }
       if (upDownLeftOrRight === 'down') {
-        console.log('DOWN');
+        if (this.props.sound) {
+          cubeSound.play();
+        }
         for (let i = 0; i < yAxisGroup.length; i++) {
           rotateGroup.attach(yAxisGroup[i]);
         }
