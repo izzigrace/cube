@@ -144,6 +144,11 @@ class Cube extends React.Component {
     var mouseLocOnDown = {x: null, y: null};
     var yAxisGroup = [];
     var xAxisGroup = [];
+    var pushIfNotExists = function(thing, array) {
+      if (!array.includes(thing)) {
+        array.push(thing);
+      }
+    }
 
     window.addEventListener('mousedown', (event) => {
       xAxisGroup = [];
@@ -174,53 +179,50 @@ class Cube extends React.Component {
 
       var facePoint = intersects[0].point;
 
-
-      let clickPoint = wholeCube.worldToLocal(facePoint.clone());
-      let clickAxis='';
-      let abc = new THREE.Vector3(abs(clickPoint.x),abs(clickPoint.y),abs(clickPoint.z))
-      if ((abc.x>abc.y)&&(abc.x>abc.z)) clickAxis = (clickPoint.x<0) ? "-X" : "+X"; // Clicked the X axis
-      if ((abc.y>abc.x)&&(abc.y>abc.z)) clickAxis = (clickPoint.y<0) ? "-Y" : "+Y"; // Clicked the Y axis
-      if ((abc.z>abc.x)&&(abc.z>abc.y)) clickAxis = (clickPoint.z<0) ? "-Z" : "+Z"; // Clicked the Z axis
-
-      // console.log('abc', abc);
-      // console.log('click axis', clickAxis);
-
       //making raycaster FROM what was clicked
       var raycaster2 = new THREE.Raycaster();
       raycaster2.ray.origin.copy(facePoint);
-      raycaster2.ray.direction.copy(intersects[0].face.normal).multiplyScalar(-1); //.applyQuaternion(intersects[0].object.quaternion); //scalar = floating point number. multiplies xyz by -1 //quaternion stores rotations
+      raycaster2.ray.direction.copy({x: 0, y: 0, z: -1});
       const intersects2 = raycaster2.intersectObject(scene);
 
       for (let i = 0; i < intersects2.length; i++) {
-        xAxisGroup.push(intersects2[i].object.parent);
-        yAxisGroup.push(intersects2[i].object.parent);
-        // var raycaster3
+        pushIfNotExists(intersects2[i].object.parent, xAxisGroup);
+        pushIfNotExists(intersects2[i].object.parent, yAxisGroup);
       }
 
 
       //make raycaster for each cube that was selected from last raycaster,  Y AXIS CUBES
       var raycaster3 = new THREE.Raycaster();
-      raycaster3.ray.origin.copy(intersects2[0].point);
-      raycaster3.ray.direction.copy({x: 0, y: -1, z: 0});
-      const intersects3 = raycaster3.intersectObject(scene);
-      for (let i = 0; i < intersects3.length; i ++) {
-        yAxisGroup.push(intersects3[i].object.parent);
+      var intersects3;
+      if (intersects2[0]) {
+        raycaster3.ray.origin.copy(intersects2[0].point);
+        raycaster3.ray.direction.copy({x: 0, y: -1, z: 0});
+        intersects3 = raycaster3.intersectObject(scene);
+        for (let i = 0; i < intersects3.length; i ++) {
+          pushIfNotExists(intersects3[i].object.parent, yAxisGroup);
+        }
       }
 
       var raycaster4 = new THREE.Raycaster();
-      raycaster4.ray.origin.copy(intersects2[2].point);
-      raycaster4.ray.direction.copy({x: 0, y: -1, z: 0});
-      const intersects4 = raycaster4.intersectObject(scene);
-      for (let i = 0; i < intersects4.length; i ++) {
-        yAxisGroup.push(intersects4[i].object.parent);
+      var intersects4;
+      if(intersects2[2]) {
+        raycaster4.ray.origin.copy(intersects2[2].point);
+        raycaster4.ray.direction.copy({x: 0, y: -1, z: 0});
+        intersects4 = raycaster4.intersectObject(scene);
+        for (let i = 0; i < intersects4.length; i ++) {
+          pushIfNotExists(intersects4[i].object.parent, yAxisGroup);
+        }
       }
 
       var raycaster5 = new THREE.Raycaster();
-      raycaster5.ray.origin.copy(intersects2[4].point);
-      raycaster5.ray.direction.copy({x: 0, y: -1, z: 0});
-      const intersects5 = raycaster5.intersectObject(scene);
-      for (let i = 0; i < intersects5.length; i ++) {
-        yAxisGroup.push(intersects5[i].object.parent);
+      var intersects5;
+      if (intersects2[4]) {
+        raycaster5.ray.origin.copy(intersects2[4].point);
+        raycaster5.ray.direction.copy({x: 0, y: -1, z: 0});
+        intersects5 = raycaster5.intersectObject(scene);
+        for (let i = 0; i < intersects5.length; i ++) {
+          pushIfNotExists(intersects5[i].object.parent, yAxisGroup);
+        }
       }
 
 
@@ -230,7 +232,7 @@ class Cube extends React.Component {
       raycaster6.ray.direction.copy({x: -1, y: 0, z: 0});
       const intersects6 = raycaster6.intersectObject(scene);
       for (let i = 0; i < intersects6.length; i ++) {
-        xAxisGroup.push(intersects6[i].object.parent);
+        pushIfNotExists(intersects6[i].object.parent, xAxisGroup);
       }
 
       var raycaster7 = new THREE.Raycaster();
@@ -238,7 +240,7 @@ class Cube extends React.Component {
       raycaster7.ray.direction.copy({x: -1, y: 0, z: 0});
       const intersects7 = raycaster7.intersectObject(scene);
       for (let i = 0; i < intersects7.length; i ++) {
-        xAxisGroup.push(intersects7[i].object.parent);
+        pushIfNotExists(intersects7[i].object.parent, xAxisGroup);
       }
 
       var raycaster8 = new THREE.Raycaster();
@@ -246,14 +248,14 @@ class Cube extends React.Component {
       raycaster8.ray.direction.copy({x: -1, y: 0, z: 0});
       const intersects8 = raycaster8.intersectObject(scene);
       for (let i = 0; i < intersects8.length; i ++) {
-        xAxisGroup.push(intersects8[i].object.parent);
+        pushIfNotExists(intersects8[i].object.parent, xAxisGroup);
       }
 
     } else {
       dontDoMouseUp = true;
     }
-    console.log(xAxisGroup);
-    console.log(yAxisGroup);
+    console.log('GROUP X', xAxisGroup);
+    console.log('GROUP Y', yAxisGroup);
     });
     //make group at (0, 0) attach cubes to them, rotate, then attach them back to the parent
 
@@ -264,9 +266,12 @@ class Cube extends React.Component {
     rotationTargetGroup.position.set(0, 1, 0);
     scene.add(rotationTargetGroup);
     var isAnimating = false;
+    var rotateSideFunction;
+    var xyorz;
+    var isItEqualPi;
 
     window.addEventListener('mouseup', (event) => {
-      console.log(dontDoMouseUp);
+      // console.log(dontDoMouseUp);
       if (!dontDoMouseUp) {
       if (isAnimating) {
         return;
@@ -279,36 +284,57 @@ class Cube extends React.Component {
         rotationTargetGroup = new THREE.Group();
         rotationTargetGroup.position.set(0, 1, 0);
         scene.add(rotationTargetGroup);
-      }, 900)
-      console.log(upDownLeftOrRight);
+      }, 1000)
+      // console.log(upDownLeftOrRight);
 
       if (upDownLeftOrRight === 'right') {
+        console.log('RIGHT');
         for (let i = 0; i < xAxisGroup.length; i++) {
           rotateGroup.attach(xAxisGroup[i]);
         }
-        rotationTargetGroup.rotation.y += PI / 2;
+
+        rotateSideFunction = function() {
+          rotateGroup.rotation.y += 0.06;
+        }
+        xyorz = 'y';
+        isItEqualPi = rotateGroup.rotation.y + (PI / 2);
         isAnimating = true;
       }
       if (upDownLeftOrRight === 'left') {
+        console.log('LEFT');
         for (let i = 0; i < xAxisGroup.length; i++) {
           rotateGroup.attach(xAxisGroup[i]);
         }
-        rotationTargetGroup.rotation.y -= PI / 2;
+        rotateSideFunction = function() {
+          rotateGroup.rotation.y -= 0.06;
+        }
+        xyorz = 'y';
+        isItEqualPi = rotateGroup.rotation.y - (PI / 2);
         isAnimating = true;
       }
 
       if (upDownLeftOrRight === 'up') {
+        console.log('UP');
         for (let i = 0; i < yAxisGroup.length; i++) {
           rotateGroup.attach(yAxisGroup[i]);
         }
-        rotationTargetGroup.rotation.x -= PI / 2;
+        rotateSideFunction = function() {
+          rotateGroup.rotation.x -= 0.06;
+        }
+        xyorz = 'x';
+        isItEqualPi = rotateGroup.rotation.x - (PI / 2);
         isAnimating = true;
       }
       if (upDownLeftOrRight === 'down') {
+        console.log('DOWN');
         for (let i = 0; i < yAxisGroup.length; i++) {
           rotateGroup.attach(yAxisGroup[i]);
         }
-        rotationTargetGroup.rotation.x += PI / 2;
+        rotateSideFunction = function() {
+          rotateGroup.rotation.x += 0.06;
+        }
+        xyorz = 'x';
+        isItEqualPi = rotateGroup.rotation.x + (PI / 2);
         isAnimating = true;
       }
 
@@ -432,11 +458,18 @@ class Cube extends React.Component {
     scene.add(wholeCube);
     wholeCube.position.set(0, 1, 0);
 
+    let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
 
     function animate() {
       requestAnimationFrame( animate );
       if (isAnimating) {
-        rotateGroup.quaternion.slerp(rotationTargetGroup.quaternion, 0.1);
+        // rotateGroup.quaternion.slerp(rotationTargetGroup.quaternion, 0.2);
+        rotateSideFunction();
+        console.log(rotateGroup.rotation[xyorz], isItEqualPi)
+        if (floatCompare(rotateGroup.rotation[xyorz], isItEqualPi)) {
+          isAnimating = false;
+          rotateGroup.rotation[xyorz] = isItEqualPi;
+        }
       } else {
         while (rotateGroup.children.length) {
           wholeCube.attach(rotateGroup.children[0]);

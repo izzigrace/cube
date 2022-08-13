@@ -37,22 +37,9 @@ html, body {
   background-color: white;
   border: 1px solid black;
   border-radius: 5px;
-  float: right;
+  margin-left: 20px;
 }
 
-/* .gradientLeftPic {
-  position: absolute;
-  height: 750px;
-  margin-left: -550px;
-  margin-right: 500px;
-  margin-top: -50px;
-}
-
-.gradientRightPic {
-  position: absolute;
+.timeAndButtonContainer {
   float: right;
-  margin-left: 850px;
-  margin-top: -50px;
-  height: 750px;
-  z-index: 100;
-} */
+}
