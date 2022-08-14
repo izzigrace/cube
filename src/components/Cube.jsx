@@ -191,13 +191,17 @@ class Cube extends React.Component {
       //making raycaster FROM what was clicked
       var raycaster2 = new THREE.Raycaster();
       raycaster2.ray.origin.copy(facePoint);
+      console.log('origin of raycaster2', raycaster2.ray.origin);
       raycaster2.ray.direction.copy({x: 0, y: 0, z: -1});
+      console.log('raycaster2 direction', raycaster2.ray.direction);
       const intersects2 = raycaster2.intersectObject(scene);
 
       for (let i = 0; i < intersects2.length; i++) {
         pushIfNotExists(intersects2[i].object.parent, xAxisGroup);
         pushIfNotExists(intersects2[i].object.parent, yAxisGroup);
       }
+
+      //just set raycaster2 to a new direction and push those intersects to the array. or make raycaster2's origin set to xaxis array[0], [1], [2], because there will only be 3 things in the intersects at this point since weve only done the part where we get the parents of the first three and push them
 
 
       //make raycaster for each cube that was selected from last raycaster,  Y AXIS CUBES
@@ -263,8 +267,8 @@ class Cube extends React.Component {
     } else {
       dontDoMouseUp = true;
     }
-    console.log('GROUP X', xAxisGroup);
-    console.log('GROUP Y', yAxisGroup);
+    // console.log('GROUP X', xAxisGroup);
+    // console.log('GROUP Y', yAxisGroup);
     });
     //make group at (0, 0) attach cubes to them, rotate, then attach them back to the parent
 
@@ -297,7 +301,6 @@ class Cube extends React.Component {
       // console.log(upDownLeftOrRight);
 
       if (upDownLeftOrRight === 'right') {
-        console.log('RIGHT');
         if (this.props.sound) {
           cubeSound2.play();
         }
@@ -483,7 +486,6 @@ class Cube extends React.Component {
       if (isAnimating) {
         // rotateGroup.quaternion.slerp(rotationTargetGroup.quaternion, 0.2);
         rotateSideFunction();
-        console.log(rotateGroup.rotation[xyorz], isItEqualPi)
         if (floatCompare(rotateGroup.rotation[xyorz], isItEqualPi)) {
           isAnimating = false;
           rotateGroup.rotation[xyorz] = isItEqualPi;
