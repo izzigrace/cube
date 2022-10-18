@@ -50,6 +50,7 @@ class Cube extends React.Component {
     var scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
 
+    // webglrenderer displays your scene using webgl. antialias: true is making it more realistic by smoothing jagged lines
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
@@ -75,7 +76,7 @@ class Cube extends React.Component {
     // controls.maxPolarAngle = Math.PI / 2;
     controls.autoRotate = false;
 
-    //window resizing
+    //handles window resizing
     function onWindowResize (event) {
       let width = (window.innerWidth)|0;
       let height = (window.innerHeight)|0;
@@ -195,6 +196,7 @@ class Cube extends React.Component {
       raycaster2.ray.direction.copy({x: 0, y: 0, z: -1});
       console.log('raycaster2 direction', raycaster2.ray.direction);
       const intersects2 = raycaster2.intersectObject(scene);
+      // var functionToMakeRayCasterDirection = ()
 
       for (let i = 0; i < intersects2.length; i++) {
         pushIfNotExists(intersects2[i].object.parent, xAxisGroup);
