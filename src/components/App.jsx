@@ -41,24 +41,29 @@ class App extends React.Component {
   // }
 
   timer (event) {
-    event.preventDefault();
+    // event.preventDefault();
     this.setState({startTimer: true});
+    this.setState({seconds:0});
+    this.setState({minutes: 0});
     var interval = setInterval(() => {
-      if (this.state.seconds === 59) {
-        this.setState({seconds: 0});
-        this.setState({minutes: this.state.minutes + 1});
+      if (this.state.startTimer) {
+        if (this.state.seconds === 59) {
+          this.setState({seconds: 0});
+          this.setState({minutes: this.state.minutes + 1});
+        }
+        this.setState({
+          seconds: this.state.seconds + 1
+        })
       }
-      this.setState({
-        seconds: this.state.seconds + 1
-      })
+      if (this.state.startTimer === false) {
+        clearInterval(interval)
+      }
     }, 1000);
-    if (this.startTimer === false) {
-      clearInterval()
-    }
   }
 
   stopTimer (event) {
-    event.preventDefault();
+    // event.preventDefault();
+    console.log(this);
     this.setState({startTimer: false});
     this.setState({modal: true});
   }
