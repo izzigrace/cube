@@ -33,6 +33,8 @@ import singlecube24 from '../models/singlecube24.gltf';
 import singlecube25 from '../models/singlecube25.gltf';
 import singlecube26 from '../models/singlecube26.gltf';
 
+//slabs of -z or +z etc to see location
+
 class Cube extends React.Component {
   constructor(props) {
     super(props);
