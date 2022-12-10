@@ -6,34 +6,11 @@ import sound from '../models/cube sound.mp3';
 import sound2 from '../models/cube sound2.mp3';
 import sound3 from '../models/cube sound3.mp3';
 import sound4 from '../models/cube sound4.mp3';
-import singlecube1 from '../models/singlecube1.gltf';
-import singlecube2 from '../models/singlecube2.gltf';
-import singlecube3 from '../models/singlecube3.gltf';
-import singlecube4 from '../models/singlecube4.gltf';
-import singlecube5 from '../models/singlecube5.gltf';
-import singlecube6 from '../models/singlecube6.gltf';
-import singlecube7 from '../models/singlecube7.gltf';
-import singlecube8 from '../models/singlecube8.gltf';
-import singlecube9 from '../models/singlecube9.gltf';
-import singlecube10 from '../models/singlecube10.gltf';
-import singlecube11 from '../models/singlecube11.gltf';
-import singlecube12 from '../models/singlecube12.gltf';
-import singlecube13 from '../models/singlecube13.gltf';
-import singlecube14 from '../models/singlecube14.gltf';
-import singlecube15 from '../models/singlecube15.gltf';
-import singlecube16 from '../models/singlecube16.gltf';
-import singlecube17 from '../models/singlecube17.gltf';
-import singlecube18 from '../models/singlecube18.gltf';
-import singlecube19 from '../models/singlecube19.gltf';
-import singlecube20 from '../models/singlecube20.gltf';
-import singlecube21 from '../models/singlecube21.gltf';
-import singlecube22 from '../models/singlecube22.gltf';
-import singlecube23 from '../models/singlecube23.gltf';
-import singlecube24 from '../models/singlecube24.gltf';
-import singlecube25 from '../models/singlecube25.gltf';
-import singlecube26 from '../models/singlecube26.gltf';
+import cube from '../models/rubikscube3OTO.gltf';
 
 //slabs of -z or +z etc to see location
+
+// on rotate, i need a check if the cube is solved, maybe have an array to check if all the cubes are in the right position. i also need to add the move to a history/moves array, then i need to clear that array on solve.
 
 class Cube extends React.Component {
   constructor(props) {
@@ -149,6 +126,8 @@ class Cube extends React.Component {
     }
 
   })
+
+  //if location of first WHOLE INDI CUBE is 0, -1, or +1 or whatever
 
     //make raycaster
     const mouse = new THREE.Vector2();
@@ -372,117 +351,18 @@ class Cube extends React.Component {
     const wholeCube = new THREE.Group();
     //start of rendering TWENTY SEVEN CUBES
     const gltfLoader = new GLTFLoader();
-    function loadGltfs () {
-      gltfLoader.load(singlecube1, function(gltf) {
-        let cube1 = gltf.scene;
-        wholeCube.add(cube1);
-      });
-      gltfLoader.load(singlecube2, function(gltf) {
-        let cube2 = gltf.scene;
-        wholeCube.add(cube2);
-      });
-      gltfLoader.load(singlecube3, function(gltf) {
-        let cube3 = gltf.scene;
-        wholeCube.add(cube3);
-      });
-      gltfLoader.load(singlecube4, function(gltf) {
-        let cube4 = gltf.scene;
-        wholeCube.add(cube4);
-      });
-      gltfLoader.load(singlecube5, function(gltf) {
-        let cube5 = gltf.scene;
-        wholeCube.add(cube5);
-      });
-      gltfLoader.load(singlecube6, function(gltf) {
-        let cube6 = gltf.scene;
-        wholeCube.add(cube6);
-      });
-      gltfLoader.load(singlecube7, function(gltf) {
-        let cube7 = gltf.scene;
-        wholeCube.add(cube7);
-      });
-      gltfLoader.load(singlecube8, function(gltf) {
-        let cube8 = gltf.scene;
-        wholeCube.add(cube8);
-      });
-      gltfLoader.load(singlecube9, function(gltf) {
-        let cube9 = gltf.scene;
-        wholeCube.add(cube9);
-      });
-      gltfLoader.load(singlecube10, function(gltf) {
-        let cube10 = gltf.scene;
-        wholeCube.add(cube10);
-      });
-      gltfLoader.load(singlecube11, function(gltf) {
-        let cube11 = gltf.scene;
-        wholeCube.add(cube11);
-      });
-      gltfLoader.load(singlecube12, function(gltf) {
-        let cube12 = gltf.scene;
-        wholeCube.add(cube12);
-      });
-      gltfLoader.load(singlecube13, function(gltf) {
-        let cube13 = gltf.scene;
-        wholeCube.add(cube13);
-      });
-      gltfLoader.load(singlecube14, function(gltf) {
-        let cube14 = gltf.scene;
-        wholeCube.add(cube14);
-      });
-      gltfLoader.load(singlecube15, function(gltf) {
-        let cube15 = gltf.scene;
-        wholeCube.add(cube15);
-      });
-      gltfLoader.load(singlecube16, function(gltf) {
-        let cube16 = gltf.scene;
-        wholeCube.add(cube16);
-      });
-      gltfLoader.load(singlecube17, function(gltf) {
-        let cube17 = gltf.scene;
-        wholeCube.add(cube17);
-      });
-      gltfLoader.load(singlecube18, function(gltf) {
-        let cube18 = gltf.scene;
-        wholeCube.add(cube18);
-      });
-      gltfLoader.load(singlecube19, function(gltf) {
-        let cube19 = gltf.scene;
-        wholeCube.add(cube19);
-      });
-      gltfLoader.load(singlecube20, function(gltf) {
-        let cube20 = gltf.scene;
-        wholeCube.add(cube20);
-      });
-      gltfLoader.load(singlecube21, function(gltf) {
-        let cube21 = gltf.scene;
-        wholeCube.add(cube21);
-      });
-      gltfLoader.load(singlecube22, function(gltf) {
-        let cube22 = gltf.scene;
-        wholeCube.add(cube22);
-        console.log('cube22', cube22.children[0].children[0].position);
-      });
-      gltfLoader.load(singlecube23, function(gltf) {
-        let cube23 = gltf.scene;
-        wholeCube.add(cube23);
-      });
-      gltfLoader.load(singlecube24, function(gltf) {
-        let cube24 = gltf.scene;
-        wholeCube.add(cube24);
-      });
-      gltfLoader.load(singlecube25, function(gltf) {
-        let cube25 = gltf.scene;
-        wholeCube.add(cube25);
-      });
-      gltfLoader.load(singlecube26, function(gltf) {
-        let cube26 = gltf.scene;
-        wholeCube.add(cube26);
-      });
-    }
-    loadGltfs();
-    //ending mini cubes finally and adding group of all of them to scene
+
+    gltfLoader.load(cube, function(gltf) {
+      let cube1 = gltf.scene;
+      wholeCube.add(cube1);
+    });
+
+    //add cube to scene
     scene.add(wholeCube);
     wholeCube.position.set(0, 1, 0);
+    setTimeout(() => {
+      console.log('whoelcube', wholeCube.children[0].children[0].position);
+    }, 1000);
 
     let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
 
