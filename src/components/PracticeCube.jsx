@@ -12,6 +12,8 @@ import cube from '../models/rubikscube3OTO.gltf';
 
 // on rotate, i need a check if the cube is solved, maybe have an array to check if all the cubes are in the right position. i also need to add the move to a history/moves array, then i need to clear that array on solve.
 
+// one raycaster var and just change direction and stuff with all the helper functions
+
 class Cube extends React.Component {
   constructor(props) {
     super(props);
