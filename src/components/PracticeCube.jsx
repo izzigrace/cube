@@ -129,7 +129,7 @@ class Cube extends React.Component {
 
   })
 
-  //if location of first WHOLE INDI CUBE is 0, -1, or +1 or whatever
+  //if location of first WHOLE INDIV CUBE is 0, -1, or +1 or whatever
 
     //make raycaster
     const mouse = new THREE.Vector2();
@@ -363,8 +363,17 @@ class Cube extends React.Component {
     scene.add(wholeCube);
     wholeCube.position.set(0, 1, 0);
     setTimeout(() => {
-      console.log('whoelcube', wholeCube.children[0].children[0].position);
+      console.log('whoelcube', wholeCube.children[0].children[0].position.x);
+      for (let i = 0; i < wholeCube.children[0].children.length; i++) {
+        if (wholeCube.children[0].children[i] && wholeCube.children[0].children[i].position.x > 1) {
+          console.log('hi');
+          console.log('whatever', wholeCube.children[0].children)
+          wholeCube.children[0].children[i].children[0].material.color.set(0xff0000);
+        }
+      }
     }, 1000);
+    console.log('scene children', scene.children);
+
 
     let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
 
