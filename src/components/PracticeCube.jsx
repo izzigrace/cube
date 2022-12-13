@@ -18,6 +18,9 @@ import cube from '../models/rubikscube3OTO.gltf';
 //on mouse down: get which face was clicked, then get which cube was clicked and write down the two axese that arent the face one or whatever
 //on mouse up: get direction of swipe, for example if the mouse down was on the +z face, and the cube on mouse down was on the +x and +y, and the direction of mouse swipe on mouse up was right, then we take all the cubes in the whole group that have a +1 y for example and we rotate them to the right
 
+
+// on mouse up could i try and do another raycastor to see if it intersects anything and if it does i can return and end the function? might be easier than doing the dontDoMoudeUp and doMouseUp or whatever im doing now
+
 class Cube extends React.Component {
   constructor(props) {
     super(props);
@@ -148,8 +151,6 @@ class Cube extends React.Component {
     }
 
     window.addEventListener('mousedown', (event) => {
-      xAxisGroup = [];
-      yAxisGroup = [];
 
       if (mouseOnCube) {
         dontDoMouseUp = false;
@@ -157,6 +158,7 @@ class Cube extends React.Component {
         //set mouse location
         mouseLocOnDown.x = event.clientX;
         mouseLocOnDown.y = event.clientY;
+
 
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -192,66 +194,6 @@ class Cube extends React.Component {
 
       //just set raycaster2 to a new direction and push those intersects to the array. or make raycaster2's origin set to xaxis array[0], [1], [2], because there will only be 3 things in the intersects at this point since weve only done the part where we get the parents of the first three and push them
 
-
-      //make raycaster for each cube that was selected from last raycaster,  Y AXIS CUBES
-      var raycaster3 = new THREE.Raycaster();
-      var intersects3;
-      if (intersects2[0]) {
-        raycaster3.ray.origin.copy(intersects2[0].point);
-        raycaster3.ray.direction.copy({x: 0, y: -1, z: 0});
-        intersects3 = raycaster3.intersectObject(scene);
-        for (let i = 0; i < intersects3.length; i ++) {
-          pushIfNotExists(intersects3[i].object.parent, yAxisGroup);
-        }
-      }
-
-      var raycaster4 = new THREE.Raycaster();
-      var intersects4;
-      if(intersects2[2]) {
-        raycaster4.ray.origin.copy(intersects2[2].point);
-        raycaster4.ray.direction.copy({x: 0, y: -1, z: 0});
-        intersects4 = raycaster4.intersectObject(scene);
-        for (let i = 0; i < intersects4.length; i ++) {
-          pushIfNotExists(intersects4[i].object.parent, yAxisGroup);
-        }
-      }
-
-      var raycaster5 = new THREE.Raycaster();
-      var intersects5;
-      if (intersects2[4]) {
-        raycaster5.ray.origin.copy(intersects2[4].point);
-        raycaster5.ray.direction.copy({x: 0, y: -1, z: 0});
-        intersects5 = raycaster5.intersectObject(scene);
-        for (let i = 0; i < intersects5.length; i ++) {
-          pushIfNotExists(intersects5[i].object.parent, yAxisGroup);
-        }
-      }
-
-
-      //make raycaster for each cube that was selected from last raycaster,  X AXIS CUBES
-      var raycaster6 = new THREE.Raycaster();
-      raycaster6.ray.origin.copy(intersects2[0].point);
-      raycaster6.ray.direction.copy({x: -1, y: 0, z: 0});
-      const intersects6 = raycaster6.intersectObject(scene);
-      for (let i = 0; i < intersects6.length; i ++) {
-        pushIfNotExists(intersects6[i].object.parent, xAxisGroup);
-      }
-
-      var raycaster7 = new THREE.Raycaster();
-      raycaster7.ray.origin.copy(intersects2[2].point);
-      raycaster7.ray.direction.copy({x: -1, y: 0, z: 0});
-      const intersects7 = raycaster7.intersectObject(scene);
-      for (let i = 0; i < intersects7.length; i ++) {
-        pushIfNotExists(intersects7[i].object.parent, xAxisGroup);
-      }
-
-      var raycaster8 = new THREE.Raycaster();
-      raycaster8.ray.origin.copy(intersects2[4].point);
-      raycaster8.ray.direction.copy({x: -1, y: 0, z: 0});
-      const intersects8 = raycaster8.intersectObject(scene);
-      for (let i = 0; i < intersects8.length; i ++) {
-        pushIfNotExists(intersects8[i].object.parent, xAxisGroup);
-      }
 
     } else {
       dontDoMouseUp = true;
