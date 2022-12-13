@@ -14,6 +14,10 @@ import cube from '../models/rubikscube3OTO.gltf';
 
 // one raycaster var and just change direction and stuff with all the helper functions
 
+//functions: i need a different up rotation function for each side, a different down roation function for each side, the same left and right rotation functions for the 4 vertical sides and different side rotaion functions for the top and bottom faces. the up and down for top and bottom may be able yo be reused for sides, etc.
+//on mouse down: get which face was clicked, then get which cube was clicked and write down the two axese that arent the face one or whatever
+//on mouse up: get direction of swipe, for example if the mouse down was on the +z face, and the cube on mouse down was on the +x and +y, and the direction of mouse swipe on mouse up was right, then we take all the cubes in the whole group that have a +1 y for example and we rotate them to the right
+
 class Cube extends React.Component {
   constructor(props) {
     super(props);
@@ -349,9 +353,9 @@ class Cube extends React.Component {
     })
 
 
-    //make group of mini cubes
+    //make group for cubes to go in
     const wholeCube = new THREE.Group();
-    //start of rendering TWENTY SEVEN CUBES
+    //render group of cubes
     const gltfLoader = new GLTFLoader();
 
     gltfLoader.load(cube, function(gltf) {
