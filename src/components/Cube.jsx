@@ -484,6 +484,19 @@ class Cube extends React.Component {
     scene.add(wholeCube);
     wholeCube.position.set(0, 1, 0);
 
+    setTimeout(() => {
+      console.log('whoelcube', wholeCube.children[0].children[0].position.x);
+      console.log('whatever', wholeCube.children[0].children);
+      for (let i = 0; i < wholeCube.children[0].children.length; i++) {
+        if (wholeCube.children[0].children[i] && wholeCube.children[0].children[i].position.x === 0) {
+          console.log('hi');
+          console.log('position -__-', wholeCube.children[0].children[i].position);
+          console.log('color', wholeCube.children[0].children[i].children[0].material.color);
+          wholeCube.children[0].children[i].children[0].material.color.set(0xff0000);
+        }
+      }
+    }, 1000);
+
     let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
 
     function animate() {
