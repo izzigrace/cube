@@ -2,6 +2,7 @@ import React from 'react';
 import * as THREE from "three";
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min';
 import sound from '../models/cube sound.mp3';
 import sound2 from '../models/cube sound2.mp3';
 import sound3 from '../models/cube sound3.mp3';
@@ -33,7 +34,13 @@ import singlecube24 from '../models/oneCubeObjToOrg24.gltf';
 import singlecube25 from '../models/oneCubeObjToOrg25.gltf';
 import singlecube26 from '../models/oneCubeObjToOrg26.gltf';
 
+
+// fix (0, 1, 0) shit with scene vs wholeCube group
+
+
+
 //slabs of -z or +z etc to see location
+//function that takes in the click face and the rotation axis or right or left or whatever, then it rotates the with the information given
 
 class Practice2Cube extends React.Component {
   constructor(props) {
@@ -97,12 +104,12 @@ class Practice2Cube extends React.Component {
     // window.addEventListener('wheel', onMouseWheel, false);
     // function onMouseWheel (event) {
     //   // event.preventDefault();
-    //   wholeCube.rotation.y += (event.deltaX) * 0.008;
-    //   wholeCube.rotation.x += (event.deltaY) * 0.008;
+    //   scene.rotation.y += (event.deltaX) * 0.008;
+    //   scene.rotation.x += (event.deltaY) * 0.008;
     // } sadly had to get rid of this
 
 
-  const wholeCubeRaycaster = new THREE.Raycaster();
+  const sceneRaycaster = new THREE.Raycaster();
 
   var mouseOnCube = false;
   // var mouseMoveDirection = {x: null, y: null};
@@ -116,8 +123,8 @@ class Practice2Cube extends React.Component {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    wholeCubeRaycaster.setFromCamera(mouse, camera);
-    const intersectsCube = wholeCubeRaycaster.intersectObject(scene);
+    sceneRaycaster.setFromCamera(mouse, camera);
+    const intersectsCube = sceneRaycaster.intersectObject(scene);
     if (intersectsCube.length === 0) {
       controls.enableRotate = true;
       mouseOnCube = false;
@@ -190,83 +197,8 @@ class Practice2Cube extends React.Component {
       // yAxisGroup.push(intersects[0].object.parent);
 
       var facePoint = intersects[0].point;
+      console.log('this is the clicked cube', facePoint);
 
-      //making raycaster FROM what was clicked
-      var raycaster2 = new THREE.Raycaster();
-      raycaster2.ray.origin.copy(facePoint);
-      console.log('origin of raycaster2', raycaster2.ray.origin);
-      raycaster2.ray.direction.copy({x: 0, y: 0, z: -1});
-      console.log('raycaster2 direction', raycaster2.ray.direction);
-      const intersects2 = raycaster2.intersectObject(scene);
-      // var functionToMakeRayCasterDirection = ()
-
-      for (let i = 0; i < intersects2.length; i++) {
-        pushIfNotExists(intersects2[i].object.parent, xAxisGroup);
-        pushIfNotExists(intersects2[i].object.parent, yAxisGroup);
-      }
-
-      //just set raycaster2 to a new direction and push those intersects to the array. or make raycaster2's origin set to xaxis array[0], [1], [2], because there will only be 3 things in the intersects at this point since weve only done the part where we get the parents of the first three and push them
-
-
-      //make raycaster for each cube that was selected from last raycaster,  Y AXIS CUBES
-      var raycaster3 = new THREE.Raycaster();
-      var intersects3;
-      if (intersects2[0]) {
-        raycaster3.ray.origin.copy(intersects2[0].point);
-        raycaster3.ray.direction.copy({x: 0, y: -1, z: 0});
-        intersects3 = raycaster3.intersectObject(scene);
-        for (let i = 0; i < intersects3.length; i ++) {
-          pushIfNotExists(intersects3[i].object.parent, yAxisGroup);
-        }
-      }
-
-      var raycaster4 = new THREE.Raycaster();
-      var intersects4;
-      if(intersects2[2]) {
-        raycaster4.ray.origin.copy(intersects2[2].point);
-        raycaster4.ray.direction.copy({x: 0, y: -1, z: 0});
-        intersects4 = raycaster4.intersectObject(scene);
-        for (let i = 0; i < intersects4.length; i ++) {
-          pushIfNotExists(intersects4[i].object.parent, yAxisGroup);
-        }
-      }
-
-      var raycaster5 = new THREE.Raycaster();
-      var intersects5;
-      if (intersects2[4]) {
-        raycaster5.ray.origin.copy(intersects2[4].point);
-        raycaster5.ray.direction.copy({x: 0, y: -1, z: 0});
-        intersects5 = raycaster5.intersectObject(scene);
-        for (let i = 0; i < intersects5.length; i ++) {
-          pushIfNotExists(intersects5[i].object.parent, yAxisGroup);
-        }
-      }
-
-
-      //make raycaster for each cube that was selected from last raycaster,  X AXIS CUBES
-      var raycaster6 = new THREE.Raycaster();
-      raycaster6.ray.origin.copy(intersects2[0].point);
-      raycaster6.ray.direction.copy({x: -1, y: 0, z: 0});
-      const intersects6 = raycaster6.intersectObject(scene);
-      for (let i = 0; i < intersects6.length; i ++) {
-        pushIfNotExists(intersects6[i].object.parent, xAxisGroup);
-      }
-
-      var raycaster7 = new THREE.Raycaster();
-      raycaster7.ray.origin.copy(intersects2[2].point);
-      raycaster7.ray.direction.copy({x: -1, y: 0, z: 0});
-      const intersects7 = raycaster7.intersectObject(scene);
-      for (let i = 0; i < intersects7.length; i ++) {
-        pushIfNotExists(intersects7[i].object.parent, xAxisGroup);
-      }
-
-      var raycaster8 = new THREE.Raycaster();
-      raycaster8.ray.origin.copy(intersects2[4].point);
-      raycaster8.ray.direction.copy({x: -1, y: 0, z: 0});
-      const intersects8 = raycaster8.intersectObject(scene);
-      for (let i = 0; i < intersects8.length; i ++) {
-        pushIfNotExists(intersects8[i].object.parent, xAxisGroup);
-      }
 
     } else {
       dontDoMouseUp = true;
@@ -293,10 +225,11 @@ class Practice2Cube extends React.Component {
       if (isAnimating) {
         return;
       }
+      // What is this down here doing
       setTimeout(() => {
         isAnimating = false;
         while (rotateGroup.children.length) {
-          wholeCube.attach(rotateGroup.children[0]);
+          scene.attach(rotateGroup.children[0]);
         }
         rotationTargetGroup = new THREE.Group();
         rotationTargetGroup.position.set(0, 1, 0);
@@ -369,136 +302,192 @@ class Practice2Cube extends React.Component {
 
 
     //make group of mini cubes
-    const wholeCube = new THREE.Group();
+    // const scene = new THREE.Group();
     //start of rendering TWENTY SEVEN CUBES
     const gltfLoader = new GLTFLoader();
     function loadGltfs () {
       gltfLoader.load(singlecube1, function(gltf) {
         let cube1 = gltf.scene;
-        wholeCube.add(cube1);
+        scene.add(cube1);
       });
       gltfLoader.load(singlecube2, function(gltf) {
         let cube2 = gltf.scene;
-        wholeCube.add(cube2);
+        scene.add(cube2);
       });
       gltfLoader.load(singlecube3, function(gltf) {
         let cube3 = gltf.scene;
-        wholeCube.add(cube3);
+        scene.add(cube3);
       });
       gltfLoader.load(singlecube4, function(gltf) {
         let cube4 = gltf.scene;
-        wholeCube.add(cube4);
+        scene.add(cube4);
       });
       gltfLoader.load(singlecube5, function(gltf) {
         let cube5 = gltf.scene;
-        wholeCube.add(cube5);
+        scene.add(cube5);
       });
       gltfLoader.load(singlecube6, function(gltf) {
         let cube6 = gltf.scene;
-        wholeCube.add(cube6);
+        scene.add(cube6);
       });
       gltfLoader.load(singlecube7, function(gltf) {
         let cube7 = gltf.scene;
-        wholeCube.add(cube7);
+        scene.add(cube7);
       });
       gltfLoader.load(singlecube8, function(gltf) {
         let cube8 = gltf.scene;
-        wholeCube.add(cube8);
+        scene.add(cube8);
       });
       gltfLoader.load(singlecube9, function(gltf) {
         let cube9 = gltf.scene;
-        wholeCube.add(cube9);
+        scene.add(cube9);
       });
       gltfLoader.load(singlecube10, function(gltf) {
         let cube10 = gltf.scene;
-        wholeCube.add(cube10);
+        scene.add(cube10);
       });
       gltfLoader.load(singlecube11, function(gltf) {
         let cube11 = gltf.scene;
-        wholeCube.add(cube11);
+        scene.add(cube11);
       });
       gltfLoader.load(singlecube12, function(gltf) {
         let cube12 = gltf.scene;
-        wholeCube.add(cube12);
+        scene.add(cube12);
       });
       gltfLoader.load(singlecube13, function(gltf) {
         let cube13 = gltf.scene;
-        wholeCube.add(cube13);
+        scene.add(cube13);
       });
       gltfLoader.load(singlecube14, function(gltf) {
         let cube14 = gltf.scene;
-        wholeCube.add(cube14);
+        scene.add(cube14);
       });
       gltfLoader.load(singlecube15, function(gltf) {
         let cube15 = gltf.scene;
-        wholeCube.add(cube15);
+        scene.add(cube15);
       });
       gltfLoader.load(singlecube16, function(gltf) {
         let cube16 = gltf.scene;
-        wholeCube.add(cube16);
+        scene.add(cube16);
       });
       gltfLoader.load(singlecube17, function(gltf) {
         let cube17 = gltf.scene;
-        wholeCube.add(cube17);
+        scene.add(cube17);
       });
       gltfLoader.load(singlecube18, function(gltf) {
         let cube18 = gltf.scene;
-        wholeCube.add(cube18);
+        scene.add(cube18);
       });
       gltfLoader.load(singlecube19, function(gltf) {
         let cube19 = gltf.scene;
-        wholeCube.add(cube19);
+        scene.add(cube19);
       });
       gltfLoader.load(singlecube20, function(gltf) {
         let cube20 = gltf.scene;
-        wholeCube.add(cube20);
+        scene.add(cube20);
       });
       gltfLoader.load(singlecube21, function(gltf) {
         let cube21 = gltf.scene;
-        wholeCube.add(cube21);
+        scene.add(cube21);
       });
       gltfLoader.load(singlecube22, function(gltf) {
         let cube22 = gltf.scene;
-        wholeCube.add(cube22);
+        scene.add(cube22);
         console.log('cube22', cube22.children[0].children[0].position);
       });
       gltfLoader.load(singlecube23, function(gltf) {
         let cube23 = gltf.scene;
-        wholeCube.add(cube23);
+        scene.add(cube23);
       });
       gltfLoader.load(singlecube24, function(gltf) {
         let cube24 = gltf.scene;
-        wholeCube.add(cube24);
+        scene.add(cube24);
       });
       gltfLoader.load(singlecube25, function(gltf) {
         let cube25 = gltf.scene;
-        wholeCube.add(cube25);
+        scene.add(cube25);
       });
       gltfLoader.load(singlecube26, function(gltf) {
         let cube26 = gltf.scene;
-        wholeCube.add(cube26);
+        scene.add(cube26);
       });
     }
     loadGltfs();
     //ending mini cubes finally and adding group of all of them to scene
-    scene.add(wholeCube);
-    wholeCube.position.set(0, 1, 0);
+    // scene.add(scene);
+    // scene.position.set(0, 1, 0);
 
+    var xax = new THREE.Group();
+    scene.add(xax);
+    xax.position.set(0, 1, 0);
+    // setTimeout(() => {
+    //   // console.log('whoelcube', scene.children[0].children[0].position.x);
+    //   console.log('whatever', scene.children);
+    //   for (let i = 0; i < scene.children.length; i++) {
+    //     console.log(scene.children[i]);
+    //     if (scene.children[i].children[0] && scene.children[i].children[0].position.x > 0) {
+    //       console.log('position -__-', scene.children[i].children[0].position);
+    //       scene.children[i].children[0].children[0].material.color.set(0xff0000); //set color red
+    //       console.log('firstCube?', scene.children[0]);
+    //       console.log('length of group', scene.children.length);
+    //     }
+    //   }
+    // }, 5000);
     setTimeout(() => {
-      // console.log('whoelcube', wholeCube.children[0].children[0].position.x);
-      console.log('whatever', wholeCube.children);
-      for (let i = 0; i < wholeCube.children.length; i++) {
-        console.log(wholeCube.children[i]);
-        if (wholeCube.children[i].children[0] && wholeCube.children[i].children[0].position.x > 0) {
-          console.log('hi');
-          console.log('position -__-', wholeCube.children[i].children[0].position);
-          console.log('HELLO??', wholeCube.children[i].children[0]);
-          wholeCube.children[i].children[0].children[0].material.color.set(0xff0000);
-          console.log('firstCube?', wholeCube.children[0]);
-          console.log('length of group', wholeCube.children.length);
+      for (let i = 0; i < scene.children.length; i++) {
+        console.log(scene.children[i]);
+        if (scene.children[i].children[0] && scene.children[i].children[0].position.y > 0) {
+          xax.attach(scene.children[i].children[0]);
         }
       }
-    }, 5000);
+//////////
+function tRotate( obj, angles, delay, pause ) {
+  console.log('CONSOLE LOGGGGGGGG', obj);
+  new TWEEN.Tween(xax.rotation)
+          .delay(pause)
+          .to( {
+                  x: obj.rotation._x + angles.x,
+                  y: obj.rotation._y + angles.y,
+                  z: obj.rotation._z + angles.z
+              }, delay )
+          .onComplete(function() {
+            setTimeout( tRotate, pause, obj, angles, delay, pause );
+            console.log('VBUIREBVIUEBNVIUDANUFISALBFNSDIABNCUIABNUSDILBNVCUIDOSBNVCIUDSAKBVNDJKZBVNDUILSAHNFUISFBNCUIOWHNCFJUIWOAHDNCUIOWH');
+          })
+          .start();
+  }
+  tRotate(xax, {x:0,y:-Math.PI/2,z:0}, 1000, 1000 );
+///////////
+
+      // xax.rotation.y += 3.14;
+      // scene.attach(xax);
+      console.log('new length', scene.children.length);
+      console.log('XAXXXXXXX length', xax.children.length);
+
+    }, 1000);
+
+
+
+
+    // function tRotate( obj, angles, delay, pause ) {
+    //   console.log('CONSOLE LOGGGGGGGG', obj);
+    //   new TWEEN.Tween(scene.rotation)
+    //           .delay(pause)
+    //           .to( {
+    //                   x: obj.rotation._x + angles.x,
+    //                   y: obj.rotation._y + angles.y,
+    //                   z: obj.rotation._z + angles.z
+    //               }, delay )
+    //           .onComplete(function() {
+    //             setTimeout( tRotate, pause, obj, angles, delay, pause );
+    //             console.log('VBUIREBVIUEBNVIUDANUFISALBFNSDIABNCUIABNUSDILBNVCUIDOSBNVCIUDSAKBVNDJKZBVNDUILSAHNFUISFBNCUIOWHNCFJUIWOAHDNCUIOWH');
+    //           })
+    //           .start();
+    //   }
+    //   tRotate(scene, {x:0,y:-Math.PI/2,z:0}, 1000, 1000 );
+
+
+
 
     let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
 
@@ -513,7 +502,7 @@ class Practice2Cube extends React.Component {
         }
       } else {
         while (rotateGroup.children.length) {
-          wholeCube.attach(rotateGroup.children[0]);
+          scene.attach(rotateGroup.children[0]);
         }
       }
 
