@@ -15,23 +15,23 @@ import singlecube6 from '../models/oneCubeObjToOrg6.gltf';
 import singlecube7 from '../models/oneCubeObjToOrg7.gltf';
 import singlecube8 from '../models/oneCubeObjToOrg8.gltf';
 import singlecube9 from '../models/oneCubeObjToOrg9.gltf';
-import singlecube10 from '../models/singlecube10.gltf';
-import singlecube11 from '../models/singlecube11.gltf';
-import singlecube12 from '../models/singlecube12.gltf';
-import singlecube13 from '../models/singlecube13.gltf';
-import singlecube14 from '../models/singlecube14.gltf';
-import singlecube15 from '../models/singlecube15.gltf';
-import singlecube16 from '../models/singlecube16.gltf';
-import singlecube17 from '../models/singlecube17.gltf';
-import singlecube18 from '../models/singlecube18.gltf';
-import singlecube19 from '../models/singlecube19.gltf';
-import singlecube20 from '../models/singlecube20.gltf';
-import singlecube21 from '../models/singlecube21.gltf';
-import singlecube22 from '../models/singlecube22.gltf';
-import singlecube23 from '../models/singlecube23.gltf';
-import singlecube24 from '../models/singlecube24.gltf';
-import singlecube25 from '../models/singlecube25.gltf';
-import singlecube26 from '../models/singlecube26.gltf';
+import singlecube10 from '../models/oneCubeObjToOrg10.gltf';
+import singlecube11 from '../models/oneCubeObjToOrg11.gltf';
+import singlecube12 from '../models/oneCubeObjToOrg12.gltf';
+import singlecube13 from '../models/oneCubeObjToOrg13.gltf';
+import singlecube14 from '../models/oneCubeObjToOrg14.gltf';
+import singlecube15 from '../models/oneCubeObjToOrg15.gltf';
+import singlecube16 from '../models/oneCubeObjToOrg16.gltf';
+import singlecube17 from '../models/oneCubeObjToOrg17.gltf';
+import singlecube18 from '../models/oneCubeObjToOrg18.gltf';
+import singlecube19 from '../models/oneCubeObjToOrg19.gltf';
+import singlecube20 from '../models/oneCubeObjToOrg20.gltf';
+import singlecube21 from '../models/oneCubeObjToOrg21.gltf';
+import singlecube22 from '../models/oneCubeObjToOrg22.gltf';
+import singlecube23 from '../models/oneCubeObjToOrg23.gltf';
+import singlecube24 from '../models/oneCubeObjToOrg24.gltf';
+import singlecube25 from '../models/oneCubeObjToOrg25.gltf';
+import singlecube26 from '../models/oneCubeObjToOrg26.gltf';
 
 //slabs of -z or +z etc to see location
 
@@ -485,18 +485,20 @@ class Practice2Cube extends React.Component {
     wholeCube.position.set(0, 1, 0);
 
     setTimeout(() => {
-      console.log('whoelcube', wholeCube.children[0].children[0].position.x);
+      // console.log('whoelcube', wholeCube.children[0].children[0].position.x);
       console.log('whatever', wholeCube.children);
       for (let i = 0; i < wholeCube.children.length; i++) {
         console.log(wholeCube.children[i]);
-        if (wholeCube.children[i].children[0] && wholeCube.children[i].children[0].position.y > 0) {
+        if (wholeCube.children[i].children[0] && wholeCube.children[i].children[0].position.x > 0) {
           console.log('hi');
-          console.log('position -__-', wholeCube.children[i].position);
+          console.log('position -__-', wholeCube.children[i].children[0].position);
           console.log('HELLO??', wholeCube.children[i].children[0]);
           wholeCube.children[i].children[0].children[0].material.color.set(0xff0000);
+          console.log('firstCube?', wholeCube.children[0]);
+          console.log('length of group', wholeCube.children.length);
         }
       }
-    }, 1000);
+    }, 5000);
 
     let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
 
