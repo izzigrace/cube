@@ -2,7 +2,7 @@ import React from 'react';
 import * as THREE from "three";
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
-import { TWEEN } from 'three/examples/jsm/libs/tween.module.min';
+import { TWEEN } from '../three.js-master/examples/jsm/libs/tween.module.min';
 import sound from '../models/cube sound.mp3';
 import sound2 from '../models/cube sound2.mp3';
 import sound3 from '../models/cube sound3.mp3';
@@ -435,28 +435,38 @@ class Practice2Cube extends React.Component {
     // }, 5000);
     setTimeout(() => {
       for (let i = 0; i < scene.children.length; i++) {
-        console.log(scene.children[i]);
         if (scene.children[i].children[0] && scene.children[i].children[0].position.y > 0) {
           xax.attach(scene.children[i].children[0]);
         }
       }
 //////////
-function tRotate( obj, angles, delay, pause ) {
-  console.log('CONSOLE LOGGGGGGGG', obj);
-  new TWEEN.Tween(xax.rotation)
-          .delay(pause)
-          .to( {
-                  x: obj.rotation._x + angles.x,
-                  y: obj.rotation._y + angles.y,
-                  z: obj.rotation._z + angles.z
-              }, delay )
-          .onComplete(function() {
-            setTimeout( tRotate, pause, obj, angles, delay, pause );
-            console.log('VBUIREBVIUEBNVIUDANUFISALBFNSDIABNCUIABNUSDILBNVCUIDOSBNVCIUDSAKBVNDJKZBVNDUILSAHNFUISFBNCUIOWHNCFJUIWOAHDNCUIOWH');
-          })
-          .start();
-  }
-  tRotate(xax, {x:0,y:-Math.PI/2,z:0}, 1000, 1000 );
+var group = new THREE.Group();
+scene.add(group);
+var rotato = xax.rotation;
+var tween1 = new TWEEN.Tween({x: xax.position.x, y: xax.position.y, z: xax.position.z, rY: rotato.y})
+      .to( {
+              x: xax.position.x,
+              y: xax.position.y,
+              z: xax.position.z,
+              rY: rotato.rotation + (PI / 2)
+          } )
+      .easing(TWEEN.Easing.Bounce.InOut)
+      .onComplete(() => {
+        console.log('TWEEN COMPLETED :)))))))')
+      })
+
+tween1.onUpdate((object: {x: number, y: number, z: number, rY: number}, elapsed: number) => {
+        group.attach(xax);
+        console.log('onUpdate happened');
+        xax.position.set(object.x, object.y, object.z);
+        // group.rotation._y = object.rY;
+        group.rotation.y += ((PI / 2) / 61);
+      })
+
+tween1.start();
+
+
+// xax.rotation.y += (PI / 2);
 ///////////
 
       // xax.rotation.y += 3.14;
@@ -464,7 +474,7 @@ function tRotate( obj, angles, delay, pause ) {
       console.log('new length', scene.children.length);
       console.log('XAXXXXXXX length', xax.children.length);
 
-    }, 1000);
+    }, 5000);
 
 
 
@@ -491,8 +501,9 @@ function tRotate( obj, angles, delay, pause ) {
 
     let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
 
-    function animate() {
+    function animate(time) {
       requestAnimationFrame( animate );
+      TWEEN.update(time);
       if (isAnimating) {
         // rotateGroup.quaternion.slerp(rotationTargetGroup.quaternion, 0.2);
         rotateSideFunction();
