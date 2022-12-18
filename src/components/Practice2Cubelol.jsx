@@ -420,19 +420,19 @@ class Practice2Cube extends React.Component {
     var xax = new THREE.Group();
     scene.add(xax);
     xax.position.set(0, 1, 0);
-    // setTimeout(() => {
-    //   // console.log('whoelcube', scene.children[0].children[0].position.x);
-    //   console.log('whatever', scene.children);
-    //   for (let i = 0; i < scene.children.length; i++) {
-    //     console.log(scene.children[i]);
-    //     if (scene.children[i].children[0] && scene.children[i].children[0].position.x > 0) {
-    //       console.log('position -__-', scene.children[i].children[0].position);
-    //       scene.children[i].children[0].children[0].material.color.set(0xff0000); //set color red
-    //       console.log('firstCube?', scene.children[0]);
-    //       console.log('length of group', scene.children.length);
-    //     }
-    //   }
-    // }, 5000);
+    setTimeout(() => {
+      // console.log('whoelcube', scene.children[0].children[0].position.x);
+      console.log('whatever', scene.children);
+      for (let i = 0; i < scene.children.length; i++) {
+        console.log(scene.children[i]);
+        if (scene.children[i].children[0] && scene.children[i].children[0].position.x > 0) {
+          console.log('position -__-', scene.children[i].children[0].position);
+          scene.children[i].children[0].children[0].material.color.set(0xff0000); //set color red
+          console.log('firstCube?', scene.children[0]);
+          console.log('length of group', scene.children.length);
+        }
+      }
+    }, 5000);
     setTimeout(() => {
       for (let i = 0; i < scene.children.length; i++) {
         if (scene.children[i].children[0] && scene.children[i].children[0].position.y > 0) {
@@ -448,19 +448,19 @@ var tween1 = new TWEEN.Tween({x: xax.position.x, y: xax.position.y, z: xax.posit
               x: xax.position.x,
               y: xax.position.y,
               z: xax.position.z,
-              rY: rotato.rotation + (PI / 2)
-          } )
-      .easing(TWEEN.Easing.Bounce.InOut)
+              rY: rotato.y + (PI / 2)
+          }, 400)
+          .easing(TWEEN.Easing.Quintic.Out)
       .onComplete(() => {
+        // remove cubes from group
         console.log('TWEEN COMPLETED :)))))))')
       })
 
 tween1.onUpdate((object: {x: number, y: number, z: number, rY: number}, elapsed: number) => {
         group.attach(xax);
-        console.log('onUpdate happened');
-        xax.position.set(object.x, object.y, object.z);
-        // group.rotation._y = object.rY;
-        group.rotation.y += ((PI / 2) / 61);
+        console.log('rY', group.rotation._y);
+        group.rotation.y = object.rY;
+        // group.rotation.y += ((PI / 2) / 32);
       })
 
 tween1.start();
@@ -474,7 +474,7 @@ tween1.start();
       console.log('new length', scene.children.length);
       console.log('XAXXXXXXX length', xax.children.length);
 
-    }, 5000);
+    }, 3000);
 
 
 
