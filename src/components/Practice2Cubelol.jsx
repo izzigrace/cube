@@ -417,64 +417,75 @@ class Practice2Cube extends React.Component {
     // scene.add(scene);
     // scene.position.set(0, 1, 0);
 
-    var xax = new THREE.Group();
-    scene.add(xax);
-    xax.position.set(0, 1, 0);
+    // var xax = new THREE.Group();
+    // scene.add(xax);
+    // xax.position.set(0, 1, 0);
     setTimeout(() => {
       // console.log('whoelcube', scene.children[0].children[0].position.x);
-      console.log('whatever', scene.children);
+      // console.log('whatever', scene.children);
       for (let i = 0; i < scene.children.length; i++) {
-        console.log(scene.children[i]);
+        // console.log(scene.children[i]);
         if (scene.children[i].children[0] && scene.children[i].children[0].position.x > 0) {
-          console.log('position -__-', scene.children[i].children[0].position);
+          // console.log('position -__-', scene.children[i].children[0].position);
           scene.children[i].children[0].children[0].material.color.set(0xff0000); //set color red
-          console.log('firstCube?', scene.children[0]);
-          console.log('length of group', scene.children.length);
+          // console.log('firstCube?', scene.children[0]);
+          // console.log('length of group', scene.children.length);
         }
       }
     }, 5000);
-    setTimeout(() => {
-      for (let i = 0; i < scene.children.length; i++) {
-        if (scene.children[i].children[0] && scene.children[i].children[0].position.y > 0) {
-          xax.attach(scene.children[i].children[0]);
-        }
-      }
-//////////
-var group = new THREE.Group();
-scene.add(group);
-var rotato = xax.rotation;
-var tween1 = new TWEEN.Tween({x: xax.position.x, y: xax.position.y, z: xax.position.z, rY: rotato.y})
-      .to( {
-              x: xax.position.x,
-              y: xax.position.y,
-              z: xax.position.z,
-              rY: rotato.y + (PI / 2)
-          }, 400)
-          .easing(TWEEN.Easing.Quintic.Out)
-      .onComplete(() => {
-        // remove cubes from group
-        console.log('TWEEN COMPLETED :)))))))')
-      })
 
-tween1.onUpdate((object: {x: number, y: number, z: number, rY: number}, elapsed: number) => {
-        group.attach(xax);
-        console.log('rY', group.rotation._y);
-        group.rotation.y = object.rY;
-        // group.rotation.y += ((PI / 2) / 32);
-      })
+    console.log('SCENE CHILDREN', scene.children);
 
-tween1.start();
+// setTimeout(() => {
+//       for (let i = 0; i < scene.children.length; i++) {
+//         if (scene.children[i].children[0] && scene.children[i].children[0].position.y > 0) {
+//           xax.attach(scene.children[i].children[0]);
+//         }
+//       }
+// //////////
+// // var group = new THREE.Group();
+// // scene.add(group);
+// var rotato = xax.rotation;
+// var tween1 = new TWEEN.Tween({x: xax.position.x, y: xax.position.y, z: xax.position.z, rY: rotato.y})
+//       .to( {
+//               x: xax.position.x,
+//               y: xax.position.y,
+//               z: xax.position.z,
+//               rY: rotato.y + (PI / 2)
+//           }, 400)
+//           .easing(TWEEN.Easing.Quintic.Out)
+//       .onComplete(() => {
+//         // remove cubes from group
+//         console.log('scene children before', scene.children)
+//         for (let i = 0; i < xax.children.length; i++) {
+//           console.log('length', xax.children.length);
+//           // scene.attach(xax.children[i]);
+//           console.log('scene children after', scene.children);
+//         }
+//         scene.remove(xax);
+//         console.log('TWEEN COMPLETED :)))))))')
+//       })
+
+// tween1.onUpdate((object: {x: number, y: number, z: number, rY: number}, elapsed: number) => {
+//         // group.attach(xax);
+//         // console.log('rY', xax.rotation._y);
+//         xax.rotation.y = object.rY;
+//         // group.rotation.y += ((PI / 2) / 32);
+//       })
+
+// tween1.start();
 
 
-// xax.rotation.y += (PI / 2);
-///////////
+// // xax.rotation.y += (PI / 2);
+// ///////////
 
-      // xax.rotation.y += 3.14;
-      // scene.attach(xax);
-      console.log('new length', scene.children.length);
-      console.log('XAXXXXXXX length', xax.children.length);
+//       // xax.rotation.y += 3.14;
+//       // scene.attach(xax);
+//       console.log('new length', scene.children.length);
+//       console.log('XAXXXXXXX length', xax.children.length);
 
-    }, 3000);
+//     }, 3000);
+
 
 
 
