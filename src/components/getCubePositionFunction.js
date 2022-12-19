@@ -166,6 +166,136 @@ function getCubePositions(scene) {
     }
   }
 
+//z slab
+  positionRay.ray.origin.copy(new THREE.Vector3(2, 5, 0));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.z.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(0, 5, 0));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    console.log('erm', intersectsAssignRay[i].object.parent.parent);
+    if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent) && intersectsAssignRay[i].object.parent.parent.children.length < 20) {
+      positions.z.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, 0));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.z.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+
+
+//negative x slab
+  positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, -2));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.nx.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.nx.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, 0));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.nx.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.nx.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, 2));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.nx.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.nx.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+
+
+//negative y slab
+  positionRay.ray.origin.copy(new THREE.Vector3(-5, -2, -2));
+  positionRay.ray.direction.copy({x: 1, y: 0, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.ny.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.ny.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(-5, -2, 0));
+  positionRay.ray.direction.copy({x: 1, y: 0, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.ny.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.ny.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(-5, -2, 2));
+  positionRay.ray.direction.copy({x: 1, y: 0, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.ny.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.ny.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+
+
+//negative z slab
+  positionRay.ray.origin.copy(new THREE.Vector3(2, 5, -2));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.nz.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(0, 5, -2));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.nz.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+  //
+  positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, -2));
+  positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+  intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+  for (let i = 0; i < intersectsAssignRay.length; i++) {
+    if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
+      positions.nz.push(intersectsAssignRay[i].object.parent.parent)
+    }
+  }
+
+  return positions;
+
 }
 
 module.exoports = {

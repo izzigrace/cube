@@ -511,52 +511,53 @@ class Practice2Cube extends React.Component {
       var positions = {px: [], py: [], pz: [], x: [], y: [], z: [], nx: [], ny: [], nz: []};
       var positionRay = new THREE.Raycaster();
 
-      positionRay.ray.origin.copy(new THREE.Vector3(2, 5, 0));
+      positionRay.ray.origin.copy(new THREE.Vector3(2, 5, -2));
       positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
       var intersectsAssignRay = positionRay.intersectObject(scene, true);
       scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
 
       for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.z.push(intersectsAssignRay[i].object.parent.parent)
+        if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.nz.push(intersectsAssignRay[i].object.parent.parent)
         }
       }
 //
-      positionRay.ray.origin.copy(new THREE.Vector3(0, 5, 0));
+      positionRay.ray.origin.copy(new THREE.Vector3(0, 5, -2));
       positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
       intersectsAssignRay = positionRay.intersectObject(scene, true);
 
       scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
 
       for (let i = 0; i < intersectsAssignRay.length; i++) {
-        console.log('erm', intersectsAssignRay[i].object.parent.parent);
-        if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent) && intersectsAssignRay[i].object.parent.parent.children.length < 20) {
-          positions.z.push(intersectsAssignRay[i].object.parent.parent)
+        if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.nz.push(intersectsAssignRay[i].object.parent.parent)
         }
       }
 //
-      positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, 0));
+      positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, -2));
       positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
       intersectsAssignRay = positionRay.intersectObject(scene, true);
 
       scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
 
       for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.z.push(intersectsAssignRay[i].object.parent.parent)
+        if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.nz.push(intersectsAssignRay[i].object.parent.parent)
         }
       }
 
       console.log('x positions', positions.x);
 
-      for (let i = 0; i < positions.z.length; i++) {
-        console.log('ppppppp', positions.z[i].children[0]);
-        positions.z[i].children[0].children[0].material.color.set(0xff0000);
+      for (let i = 0; i < positions.nz.length; i++) {
+        console.log('ppppppp', positions.nz[i].children[0]);
+        positions.nz[i].children[0].children[0].material.color.set(0xff0000);
       }
 
     }, 3000)
 
 ///////
+
+//if it gets stuck when looking at the very bottom it could be that the raycasters in the very middle for the z slab are getting in the way? like the mouse is touching the ray so it thinks mouse is over cube? idk
 
 setTimeout(() => {
   var xax = [];
