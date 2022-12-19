@@ -511,47 +511,47 @@ class Practice2Cube extends React.Component {
       var positions = {px: [], py: [], pz: [], x: [], y: [], z: [], nx: [], ny: [], nz: []};
       var positionRay = new THREE.Raycaster();
 
-      positionRay.ray.origin.copy(new THREE.Vector3(5, 2, 2));
-      positionRay.ray.direction.copy({x: -1, y: 0, z: 0});
+      positionRay.ray.origin.copy(new THREE.Vector3(2, 5, 0));
+      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
       var intersectsAssignRay = positionRay.intersectObject(scene, true);
       scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
-      console.log('ray position in assign func intersects', intersectsAssignRay);
 
       for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.py.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.py.push(intersectsAssignRay[i].object.parent.parent)
+        if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.z.push(intersectsAssignRay[i].object.parent.parent)
         }
       }
 //
-      positionRay.ray.origin.copy(new THREE.Vector3(5, 2, 0));
-      positionRay.ray.direction.copy({x: -1, y: 0, z: 0});
+      positionRay.ray.origin.copy(new THREE.Vector3(0, 5, 0));
+      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
       intersectsAssignRay = positionRay.intersectObject(scene, true);
 
       scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
 
       for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.py.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.py.push(intersectsAssignRay[i].object.parent.parent)
+        console.log('erm', intersectsAssignRay[i].object.parent.parent);
+        if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent) && intersectsAssignRay[i].object.parent.parent.children.length < 20) {
+          positions.z.push(intersectsAssignRay[i].object.parent.parent)
         }
       }
 //
-      positionRay.ray.origin.copy(new THREE.Vector3(5, 2, -2));
-      positionRay.ray.direction.copy({x: -1, y: 0, z: 0});
+      positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, 0));
+      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
       intersectsAssignRay = positionRay.intersectObject(scene, true);
 
       scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
 
       for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.py.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.py.push(intersectsAssignRay[i].object.parent.parent)
+        if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.z.push(intersectsAssignRay[i].object.parent.parent)
         }
       }
 
-      console.log(positions.px);
+      console.log('x positions', positions.x);
 
-      for (let i = 0; i < positions.py.length; i++) {
-        console.log('ppppppp', positions.py[i].children[0]);
-        positions.py[i].children[0].children[0].material.color.set(0xff0000);
+      for (let i = 0; i < positions.z.length; i++) {
+        console.log('ppppppp', positions.z[i].children[0]);
+        positions.z[i].children[0].children[0].material.color.set(0xff0000);
       }
 
     }, 3000)
