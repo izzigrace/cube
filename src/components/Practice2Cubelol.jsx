@@ -310,62 +310,62 @@ class Practice2Cube extends React.Component {
     //make group of mini cubes
     // const scene = new THREE.Group();
     //start of rendering TWENTY SEVEN CUBES
-    const gltfLoader = new GLTFLoader();
-    var groupOfCube1 = new THREE.Group();
-    scene.add(groupOfCube1);
-    var groupOfCube2 = new THREE.Group();
-    scene.add(groupOfCube2);
-    var groupOfCube3 = new THREE.Group();
-    scene.add(groupOfCube3);
-    var groupOfCube4 = new THREE.Group();
-    scene.add(groupOfCube4);
-    var groupOfCube5 = new THREE.Group();
-    scene.add(groupOfCube5);
-    var groupOfCube6 = new THREE.Group();
-    scene.add(groupOfCube6);
-    var groupOfCube7 = new THREE.Group();
-    scene.add(groupOfCube7);
-    var groupOfCube8 = new THREE.Group();
-    scene.add(groupOfCube8);
-    var groupOfCube9 = new THREE.Group();
-    scene.add(groupOfCube9);
-    var groupOfCube10 = new THREE.Group();
-    scene.add(groupOfCube10);
-    var groupOfCube11 = new THREE.Group();
-    scene.add(groupOfCube11);
-    var groupOfCube12 = new THREE.Group();
-    scene.add(groupOfCube12);
-    var groupOfCube13 = new THREE.Group();
-    scene.add(groupOfCube13);
-    var groupOfCube14 = new THREE.Group();
-    scene.add(groupOfCube14);
-    var groupOfCube15 = new THREE.Group();
-    scene.add(groupOfCube15);
-    var groupOfCube16 = new THREE.Group();
-    scene.add(groupOfCube16);
-    var groupOfCube17 = new THREE.Group();
-    scene.add(groupOfCube17);
-    var groupOfCube18 = new THREE.Group();
-    scene.add(groupOfCube18);
-    var groupOfCube19 = new THREE.Group();
-    scene.add(groupOfCube19);
-    var groupOfCube20 = new THREE.Group();
-    scene.add(groupOfCube20);
-    var groupOfCube21 = new THREE.Group();
-    scene.add(groupOfCube21);
-    var groupOfCube22 = new THREE.Group();
-    scene.add(groupOfCube22);
-    var groupOfCube23 = new THREE.Group();
-    scene.add(groupOfCube23);
-    var groupOfCube24 = new THREE.Group();
-    scene.add(groupOfCube24);
-    var groupOfCube25 = new THREE.Group();
-    scene.add(groupOfCube25);
-    var groupOfCube26 = new THREE.Group();
-    scene.add(groupOfCube26);
 
 
     function loadGltfs () {
+      const gltfLoader = new GLTFLoader();
+      var groupOfCube1 = new THREE.Group();
+      scene.add(groupOfCube1);
+      var groupOfCube2 = new THREE.Group();
+      scene.add(groupOfCube2);
+      var groupOfCube3 = new THREE.Group();
+      scene.add(groupOfCube3);
+      var groupOfCube4 = new THREE.Group();
+      scene.add(groupOfCube4);
+      var groupOfCube5 = new THREE.Group();
+      scene.add(groupOfCube5);
+      var groupOfCube6 = new THREE.Group();
+      scene.add(groupOfCube6);
+      var groupOfCube7 = new THREE.Group();
+      scene.add(groupOfCube7);
+      var groupOfCube8 = new THREE.Group();
+      scene.add(groupOfCube8);
+      var groupOfCube9 = new THREE.Group();
+      scene.add(groupOfCube9);
+      var groupOfCube10 = new THREE.Group();
+      scene.add(groupOfCube10);
+      var groupOfCube11 = new THREE.Group();
+      scene.add(groupOfCube11);
+      var groupOfCube12 = new THREE.Group();
+      scene.add(groupOfCube12);
+      var groupOfCube13 = new THREE.Group();
+      scene.add(groupOfCube13);
+      var groupOfCube14 = new THREE.Group();
+      scene.add(groupOfCube14);
+      var groupOfCube15 = new THREE.Group();
+      scene.add(groupOfCube15);
+      var groupOfCube16 = new THREE.Group();
+      scene.add(groupOfCube16);
+      var groupOfCube17 = new THREE.Group();
+      scene.add(groupOfCube17);
+      var groupOfCube18 = new THREE.Group();
+      scene.add(groupOfCube18);
+      var groupOfCube19 = new THREE.Group();
+      scene.add(groupOfCube19);
+      var groupOfCube20 = new THREE.Group();
+      scene.add(groupOfCube20);
+      var groupOfCube21 = new THREE.Group();
+      scene.add(groupOfCube21);
+      var groupOfCube22 = new THREE.Group();
+      scene.add(groupOfCube22);
+      var groupOfCube23 = new THREE.Group();
+      scene.add(groupOfCube23);
+      var groupOfCube24 = new THREE.Group();
+      scene.add(groupOfCube24);
+      var groupOfCube25 = new THREE.Group();
+      scene.add(groupOfCube25);
+      var groupOfCube26 = new THREE.Group();
+      scene.add(groupOfCube26);
       gltfLoader.load(singlecube1, function(gltf) {
         let cube1 = gltf.scene;
         groupOfCube1.attach(cube1);
@@ -502,124 +502,97 @@ class Practice2Cube extends React.Component {
     // scene.add(scene);
     // scene.position.set(0, 1, 0);
 
-
-    // setTimeout(() => {
-    //   for (let i = 0; i < scene.children.length; i++) {
-    //     if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.x > 0) {
-    //       scene.children[i].children[0].children[0].children[0].material.color.set(0xff0000); //set color red
-    //     }
-    //   }
-    // }, 10000);
-
     console.log('SCENE CHILDREN', scene.children);
 
 
-    // var xax = new THREE.Group();
-    // scene.attach(xax);
-    // xax.name = 'xax';
-    // xax.position.set(0, 1, 0);
-
-    // setTimeout(() => {
-    //   console.log('first position', scene.children[5].children[0].children[0].matrixWorld);
-    //   scene.children[5].children[0].rotation.y += (PI / 2);
-    //   scene.children[5].children[0].updateMatrix(true)
-    //   scene.children[5].children[0].updateMatrixWorld();
-    // }, 1000);
-    // setTimeout(() => {
-    //   console.log('second position', scene.children[5].children[0].children[0].matrixWorld);
-    //   console.log('distance', scene.children[5].children[0].children[0].position.distanceTo(scene.children[4].position));
-    // }, 2000)
-
-
     //raycaster from (0, 0, 0) to everycube, get direction and
-    var positions = {};
-    var positionRay = new THREE.Raycaster();
 
     setTimeout(() => {
-      // positionRay.setFromCamera(mouse, camera);
+      var positions = {px: [], py: [], pz: [], x: [], y: [], z: [], nx: [], ny: [], nz: []};
+      var positionRay = new THREE.Raycaster();
+
       positionRay.ray.origin.copy(new THREE.Vector3(2, 5, 2));
-      positionRay.ray.direction.copy({x: 0, y: -3, z: 0});
+      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
       var intersectsAssignRay = positionRay.intersectObject(scene, true);
+      // scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
       console.log('ray position in assign func intersects', intersectsAssignRay);
-      console.log('wtf', positionRay.ray.origin);
-      scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
+
       for (let i = 0; i < intersectsAssignRay.length; i++) {
-
+        if (!positions.px.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.px.push(intersectsAssignRay[i].object.parent.parent)
+        }
       }
-    }, 1000)
-      // iterate through cubes, make raycaster go from center to cube, see what axis it traveled on, put that axis as the object key and the cube as the property in an object for positions
-      // {+x: [cubeGroup1, cubeGroup2] +y: []}
+//
+      positionRay.ray.origin.copy(new THREE.Vector3(2, 5, 0));
+      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+      intersectsAssignRay = positionRay.intersectObject(scene, true);
 
+      // scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
+
+      for (let i = 0; i < intersectsAssignRay.length; i++) {
+        if (!positions.px.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.px.push(intersectsAssignRay[i].object.parent.parent)
+        }
+      }
+//
+      positionRay.ray.origin.copy(new THREE.Vector3(2, 5, -2));
+      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
+      intersectsAssignRay = positionRay.intersectObject(scene, true);
+
+      // scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
+
+      for (let i = 0; i < intersectsAssignRay.length; i++) {
+        if (!positions.px.includes(intersectsAssignRay[i].object.parent.parent)) {
+          positions.px.push(intersectsAssignRay[i].object.parent.parent)
+        }
+      }
+
+      console.log(positions.px);
+
+      for (let i = 0; i < positions.px.length; i++) {
+        console.log('ppppppp', positions.px[i].children[0]);
+        positions.px[i].children[0].children[0].material.color.set(0xff0000);
+      }
+
+    }, 3000)
 
 ///////
 
+setTimeout(() => {
+  var xax = [];
+  for (let i = 0; i < scene.children.length; i++) {
+    if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.y > 0) {
+      xax.push(scene.children[i].children[0]);
+    }
+  }
 
-// setTimeout(() => {
-//   var xax = [];
-//   for (let i = 0; i < scene.children.length; i++) {
-//     if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.y > 0) {
-//       xax.push(scene.children[i].children[0]);
-//     }
-//   }
+//////////
+var rotato = xax[0].rotation;
+var tween1 = new TWEEN.Tween({rY: rotato.y})
+  .to( {rY: rotato.y + (PI / 2)}, 400)
+      .easing(TWEEN.Easing.Quintic.Out)
+  .onComplete(() => {
+    // remove cubes from group
+    console.log('scene children', scene.children);
+    console.log('xax', xax);
+    console.log('TWEEN COMPLETED :)))))))');
+  })
 
-// //////////
-// var rotato = xax[0].rotation;
-// var tween1 = new TWEEN.Tween({rY: rotato.y})
-//   .to( {rY: rotato.y + (PI / 2)}, 400)
-//       .easing(TWEEN.Easing.Quintic.Out)
-//   .onComplete(() => {
-//     // remove cubes from group
-//     console.log('scene children', scene.children);
-//     console.log('xax', xax);
-//     console.log('TWEEN COMPLETED :)))))))');
-//   })
+  console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
+  console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
+tween1.onUpdate((object: {rY: number}, elapsed: number) => {
+  // scene.children[5].rotation.y = object.rY;
+  // scene.children[4].rotation.y = object.rY;
+    for (let i = 0; i < xax.length; i++) {
+      xax[i].parent.rotation.y = object.rY;
+      // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
+    }
+    // xax.rotation.y = object.rY;
+})
 
-//   console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
-//   console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
-// tween1.onUpdate((object: {rY: number}, elapsed: number) => {
-//   // scene.children[5].rotation.y = object.rY;
-//   // scene.children[4].rotation.y = object.rY;
-//     for (let i = 0; i < xax.length; i++) {
-//       xax[i].parent.rotation.y = object.rY;
-//       // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
-//     }
-//     // xax.rotation.y = object.rY;
-// })
+tween1.start();
 
-// tween1.start();
-
-// //i could have them each have their own group and the group only contains the one cube, and then have the groups position be 0,0 and rotate the group?
-
-
-// // xax.rotation.y += (PI / 2);
-// ///////////
-
-//   // xax.rotation.y += 3.14;
-//   // scene.attach(xax);
-
-// }, 1000);
-
-
-
-
-    // function tRotate( obj, angles, delay, pause ) {
-    //   console.log('CONSOLE LOGGGGGGGG', obj);
-    //   new TWEEN.Tween(scene.rotation)
-    //           .delay(pause)
-    //           .to( {
-    //                   x: obj.rotation._x + angles.x,
-    //                   y: obj.rotation._y + angles.y,
-    //                   z: obj.rotation._z + angles.z
-    //               }, delay )
-    //           .onComplete(function() {
-    //             setTimeout( tRotate, pause, obj, angles, delay, pause );
-    //             console.log('VBUIREBVIUEBNVIUDANUFISALBFNSDIABNCUIABNUSDILBNVCUIDOSBNVCIUDSAKBVNDJKZBVNDUILSAHNFUISFBNCUIOWHNCFJUIWOAHDNCUIOWH');
-    //           })
-    //           .start();
-    //   }
-    //   tRotate(scene, {x:0,y:-Math.PI/2,z:0}, 1000, 1000 );
-
-
+}, 1000);
 
 
     let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
