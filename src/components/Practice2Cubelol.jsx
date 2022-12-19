@@ -185,6 +185,7 @@ class Practice2Cube extends React.Component {
 
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(scene);
+      console.log('ray direction', raycaster.ray.direction);
 
       // controls.enabled = true;
       // if (intersects.length === 0) {
@@ -197,7 +198,12 @@ class Practice2Cube extends React.Component {
       // yAxisGroup.push(intersects[0].object.parent);
 
       var facePoint = intersects[0].point;
+      console.log('intersects[0]', intersects[0].object.geometry);
       console.log('this is the clicked cube', intersects[0].object.parent);
+      var positionArray = intersects[0].object.geometry.attributes.position.array;
+      var [x, y, z] = [positionArray[34*3], positionArray[34*3 + 1], positionArray[34*3 + 2]];
+      console.log(x, y, z);
+      console.log('this is the clicked cube position', x, y, z);
 
 
     } else {
@@ -497,112 +503,101 @@ class Practice2Cube extends React.Component {
     // scene.position.set(0, 1, 0);
 
 
-    setTimeout(() => {
-      for (let i = 0; i < scene.children.length; i++) {
-        if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.x > 0) {
-          scene.children[i].children[0].children[0].children[0].material.color.set(0xff0000); //set color red
-        }
-      }
-    }, 3000);
+    // setTimeout(() => {
+    //   for (let i = 0; i < scene.children.length; i++) {
+    //     if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.x > 0) {
+    //       scene.children[i].children[0].children[0].children[0].material.color.set(0xff0000); //set color red
+    //     }
+    //   }
+    // }, 10000);
 
     console.log('SCENE CHILDREN', scene.children);
 
 
-    var xax = new THREE.Group();
-    scene.attach(xax);
-    xax.name = 'xax';
+    // var xax = new THREE.Group();
+    // scene.attach(xax);
+    // xax.name = 'xax';
     // xax.position.set(0, 1, 0);
 
-// setTimeout(() => {
-//       for (let i = 0; i < scene.children.length; i++) {
-//         if (scene.children[i].children[0] && scene.children[i].children[0].position.y > 0) {
-//           xax.attach(scene.children[i].children[0]);
-//         }
-//       }
-//       console.log('world position', xax.children[1].getWorldPosition(new THREE.Vector3()));
-//       console.log('just position', xax.children[0].position);
-// //////////
-// // var group = new THREE.Group();
-// // scene.add(group);
-// var rotato = xax.rotation;
-// var tween1 = new TWEEN.Tween({rY: rotato.y})
-//       .to( {rY: rotato.y + (PI / 2)}, 400)
-//           .easing(TWEEN.Easing.Quintic.Out)
-//       .onComplete(() => {
-//         // remove cubes from group
-//         console.log('scene children before', scene.children)
-//         console.log('xax', xax);
-//         var length = xax.children.length;
-//         for (let i = 0; i < length; i++) {
-//           console.log('length', xax.children.length);
-//           // scene.attach(xax.children[i]);
-//         }
-//         // scene.remove(xax);
-//         console.log('TWEEN COMPLETED :)))))))')
-//         console.log('scene children after', scene.children);
-//       })
+    // setTimeout(() => {
+    //   console.log('first position', scene.children[5].children[0].children[0].matrixWorld);
+    //   scene.children[5].children[0].rotation.y += (PI / 2);
+    //   scene.children[5].children[0].updateMatrix(true)
+    //   scene.children[5].children[0].updateMatrixWorld();
+    // }, 1000);
+    // setTimeout(() => {
+    //   console.log('second position', scene.children[5].children[0].children[0].matrixWorld);
+    //   console.log('distance', scene.children[5].children[0].children[0].position.distanceTo(scene.children[4].position));
+    // }, 2000)
 
-//     tween1.onUpdate((object: {rY: number}, elapsed: number) => {
-//         xax.rotation.y = object.rY;
-//       })
+
+    //raycaster from (0, 0, 0) to everycube, get direction and
+    var positions = {};
+    var positionRay = new THREE.Raycaster();
+
+    setTimeout(() => {
+      // positionRay.setFromCamera(mouse, camera);
+      positionRay.ray.origin.copy(new THREE.Vector3(2, 5, 2));
+      positionRay.ray.direction.copy({x: 0, y: -3, z: 0});
+      var intersectsAssignRay = positionRay.intersectObject(scene, true);
+      console.log('ray position in assign func intersects', intersectsAssignRay);
+      console.log('wtf', positionRay.ray.origin);
+      scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
+      for (let i = 0; i < intersectsAssignRay.length; i++) {
+
+      }
+    }, 1000)
+      // iterate through cubes, make raycaster go from center to cube, see what axis it traveled on, put that axis as the object key and the cube as the property in an object for positions
+      // {+x: [cubeGroup1, cubeGroup2] +y: []}
+
+
+///////
+
+
+// setTimeout(() => {
+//   var xax = [];
+//   for (let i = 0; i < scene.children.length; i++) {
+//     if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.y > 0) {
+//       xax.push(scene.children[i].children[0]);
+//     }
+//   }
+
+// //////////
+// var rotato = xax[0].rotation;
+// var tween1 = new TWEEN.Tween({rY: rotato.y})
+//   .to( {rY: rotato.y + (PI / 2)}, 400)
+//       .easing(TWEEN.Easing.Quintic.Out)
+//   .onComplete(() => {
+//     // remove cubes from group
+//     console.log('scene children', scene.children);
+//     console.log('xax', xax);
+//     console.log('TWEEN COMPLETED :)))))))');
+//   })
+
+//   console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
+//   console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
+// tween1.onUpdate((object: {rY: number}, elapsed: number) => {
+//   // scene.children[5].rotation.y = object.rY;
+//   // scene.children[4].rotation.y = object.rY;
+//     for (let i = 0; i < xax.length; i++) {
+//       xax[i].parent.rotation.y = object.rY;
+//       // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
+//     }
+//     // xax.rotation.y = object.rY;
+// })
 
 // tween1.start();
+
+// //i could have them each have their own group and the group only contains the one cube, and then have the groups position be 0,0 and rotate the group?
 
 
 // // xax.rotation.y += (PI / 2);
 // ///////////
 
-//       // xax.rotation.y += 3.14;
-//       // scene.attach(xax);
-//       console.log('new length', scene.children.length);
+//   // xax.rotation.y += 3.14;
+//   // scene.attach(xax);
 
-//     }, 1000);
-
-///////
-
-
-setTimeout(() => {
-  var xax = [];
-  for (let i = 0; i < scene.children.length; i++) {
-    if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.y > 0) {
-      xax.push(scene.children[i].children[0]);
-    }
-  }
-
-//////////
-var rotato = xax[0].rotation;
-var tween1 = new TWEEN.Tween({rY: rotato.y})
-  .to( {rY: rotato.y + (PI / 2)}, 400)
-      .easing(TWEEN.Easing.Quintic.Out)
-  .onComplete(() => {
-    // remove cubes from group
-    console.log('scene children', scene.children);
-    console.log('xax', xax);
-    console.log('TWEEN COMPLETED :)))))))');
-  })
-
-tween1.onUpdate((object: {rY: number}, elapsed: number) => {
-  // scene.children[5].rotation.y = object.rY;
-  // scene.children[4].rotation.y = object.rY;
-    for (let i = 0; i < xax.length; i++) {
-      xax[i].parent.rotation.y = object.rY;
-      // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
-    }
-    // xax.rotation.y = object.rY;
-})
-
-tween1.start();
-
-//i could have them each have their own group and the group only contains the one cube, and then have the groups position be 0,0 and rotate the group?
-
-
-// xax.rotation.y += (PI / 2);
-///////////
-
-  // xax.rotation.y += 3.14;
-  // scene.attach(xax);
-
-}, 1000);
+// }, 1000);
 
 
 
