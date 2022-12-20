@@ -35,6 +35,8 @@ import singlecube25 from '../models/oneCubeObjToOrg25.gltf';
 import singlecube26 from '../models/oneCubeObjToOrg26.gltf';
 import { getCubePositions, getSlabs } from './helperFunctions';
 
+//add sounds
+
 
 // fix (0, 1, 0) shit with scene vs wholeCube group
 //function that takes in the click face and the rotation axis or right or left or whatever, then it rotates the with the information given
@@ -103,6 +105,10 @@ class Practice2Cube extends React.Component {
   var upDownLeftOrRight = '';
   var dontDoMouseUp = false;
 
+  function shuffle(history) {
+
+  }
+
   window.addEventListener('mousemove', (event) => {
     //seeing if mouse is over cube, disabling orbit controls if it is
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -144,12 +150,8 @@ class Practice2Cube extends React.Component {
 
     //make raycaster
     const mouse = new THREE.Vector2();
-    const raycaster = new THREE.Raycaster();
     var mouseLocOnDown = {x: null, y: null};
-    var positionRay = new THREE.Raycaster();
-
-    var positions = getCubePositions(scene, raycaster);
-    console.log('posiyions', positions);
+    var info;
 
 
     window.addEventListener('mousedown', (event) => {
@@ -164,13 +166,7 @@ class Practice2Cube extends React.Component {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      var info = getSlabs(scene, mouse, camera, raycaster);
-      console.log(info);
-
-
-      function rotateSlab(face, slab, rotateAxis) {
-
-      }
+      info = getSlabs(scene, mouse, camera, raycaster);
 
 
     } else {
@@ -178,7 +174,6 @@ class Practice2Cube extends React.Component {
     }
 
     });
-    //make group at (0, 0) attach cubes to them, rotate, then attach them back to the parent
 
     var rotateGroup = new THREE.Group();
     scene.add(rotateGroup);
@@ -187,88 +182,153 @@ class Practice2Cube extends React.Component {
     rotationTargetGroup.position.set(0, 1, 0);
     scene.add(rotationTargetGroup);
     var isAnimating = false;
-    var rotateSideFunction;
-    var xyorz;
-    var isItEqualPi;
+
+    const raycaster = new THREE.Raycaster();
 
     window.addEventListener('mouseup', (event) => {
       if (!dontDoMouseUp) {
       if (isAnimating) {
         return;
       }
-      // What is this down here doing
-      setTimeout(() => {
-        isAnimating = false;
-        while (rotateGroup.children.length) {
-          scene.attach(rotateGroup.children[0]);
+
+      var positionRay = new THREE.Raycaster();
+      getCubePositions(scene, positionRay);
+      var positions = getCubePositions(scene, positionRay);
+      // console.log('posiyions', positions);
+      // console.log(info);
+      var history = [];
+
+      console.log('rotation', positions[info.rightLeft.slab][0].parent.rotation);
+      var wtf = new THREE.Raycaster();
+      wtf.setFromCamera(mouse, camera);
+      const intersecting = wtf.intersectObjects(scene.children);
+      // console.log('wtf', intersecting[0].object.position);
+      // console.log('wtf', intersecting[0].object.parent.rotation);
+
+      // console.log('rotation', positions[info.rightLeft.slab][0].parent.rotation);
+
+      function rotateSlab(info, history) {
+        isAnimating = true;
+
+        //do something else and return before rest of function if face is top or bottom
+
+        if (upDownLeftOrRight === 'right') {
+          var rotato = positions[info.rightLeft.slab][0].parent.rotation;
+          var tween1 = new TWEEN.Tween({rY: rotato.y})
+            .to( {rY: rotato.y + (PI / 2)}, 400)
+                .easing(TWEEN.Easing.Quintic.Out)
+            .onComplete(() => {
+              isAnimating = false;
+            })
+          tween1.onUpdate((object: {rY: number}, elapsed: number) => {
+              for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
+                // positions[info.rightLeft.slab][i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), object.rY);
+                // positions[info.rightLeft.slab][i].rotateY(object.rY);
+                positions[info.rightLeft.slab][i].parent.rotation.y = object.rY;
+              }
+          })
+          tween1.start();
         }
-        rotationTargetGroup = new THREE.Group();
-        rotationTargetGroup.position.set(0, 1, 0);
-        scene.add(rotationTargetGroup);
-      }, 1000)
+
+        if (upDownLeftOrRight === 'left') {
+          rotato = positions[info.rightLeft.slab][0].parent.rotation;
+          tween1 = new TWEEN.Tween({rY: rotato.y})
+            .to( {rY: rotato.y - (PI / 2)}, 400)
+                .easing(TWEEN.Easing.Quintic.Out)
+            .onComplete(() => {
+              isAnimating = false;
+            })
+          tween1.onUpdate((object: {rY: number}, elapsed: number) => {
+              for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
+                positions[info.rightLeft.slab][i].parent.rotation.y = object.rY;
+              }
+          })
+          tween1.start();
+        }
+        ///
+
+        if (info.face === 'z') {
+          if (upDownLeftOrRight === 'up') {
+            rotato = positions[info.upDown.slab][0].parent.rotation;
+            tween1 = new TWEEN.Tween({rX: rotato.x})
+              .to( {rX: rotato.x - (PI / 2)}, 400)
+                  .easing(TWEEN.Easing.Quintic.Out)
+              .onComplete(() => {
+                isAnimating = false;
+              })
+            tween1.onUpdate((object: {rX: number}, elapsed: number) => {
+                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+                  positions[info.upDown.slab][i].parent.rotation.x = object.rX;
+                  // positions[info.upDown.slab][i].setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), object.rX);
+                  // positions[info.upDown.slab][i].rotateX(object.rX);
+                }
+            })
+            tween1.start();
+          }
+
+          if (upDownLeftOrRight === 'down') {
+            rotato = positions[info.upDown.slab][0].parent.rotation;
+            tween1 = new TWEEN.Tween({rX: rotato.x})
+              .to( {rX: rotato.x + (PI / 2)}, 400)
+                  .easing(TWEEN.Easing.Quintic.Out)
+              .onComplete(() => {
+                isAnimating = false;
+              })
+            tween1.onUpdate((object: {rX: number}, elapsed: number) => {
+                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+                  positions[info.upDown.slab][i].parent.rotation.x = object.rX;
+                }
+            })
+            tween1.start();
+          }
+        }
+
+        if (info.face === '-x') {
+          if (upDownLeftOrRight === 'up') {
+            rotato = positions[info.upDown.slab][0].parent.rotation;
+            tween1 = new TWEEN.Tween({rZ: rotato.z})
+              .to( {rZ: rotato.z - (PI / 2)}, 400)
+                  .easing(TWEEN.Easing.Quintic.Out)
+              .onComplete(() => {
+                isAnimating = false;
+              })
+            tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
+                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+                  positions[info.upDown.slab][i].parent.rotation.z = object.rZ;
+                }
+            })
+            tween1.start();
+          }
+
+          if (upDownLeftOrRight === 'down') {
+            rotato = positions[info.upDown.slab][0].parent.rotation;
+            tween1 = new TWEEN.Tween({rZ: rotato.z})
+              .to( {rZ: rotato.z + (PI / 2)}, 400)
+                  .easing(TWEEN.Easing.Quintic.Out)
+              .onComplete(() => {
+                isAnimating = false;
+              })
+            tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
+                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+                  positions[info.upDown.slab][i].parent.rotation.z = object.rZ;
+                }
+            })
+            tween1.start();
+          }
+        }
+
+
+      }
+
+      rotateSlab(info, history);
+
+
       // console.log(upDownLeftOrRight);
 
-      if (upDownLeftOrRight === 'right') {
-        if (this.props.sound) {
-          cubeSound2.play();
-        }
-        // for (let i = 0; i < xAxisGroup.length; i++) {
-        //   rotateGroup.attach(xAxisGroup[i]);
-        // }
-
-        rotateSideFunction = function() {
-          rotateGroup.rotation.y += 0.06;
-        }
-        xyorz = 'y';
-        isItEqualPi = rotateGroup.rotation.y + (PI / 2);
-        isAnimating = true;
-      }
-      if (upDownLeftOrRight === 'left') {
-        if (this.props.sound) {
-          cubeSound4.play();
-        }
-        // for (let i = 0; i < xAxisGroup.length; i++) {
-        //   rotateGroup.attach(xAxisGroup[i]);
-        // }
-        rotateSideFunction = function() {
-          rotateGroup.rotation.y -= 0.06;
-        }
-        xyorz = 'y';
-        isItEqualPi = rotateGroup.rotation.y - (PI / 2);
-        isAnimating = true;
-      }
-
-      if (upDownLeftOrRight === 'up') {
-        if (this.props.sound) {
-          cubeSound2.play();
-        }
-        // for (let i = 0; i < yAxisGroup.length; i++) {
-        //   rotateGroup.attach(yAxisGroup[i]);
-        // }
-        rotateSideFunction = function() {
-          rotateGroup.rotation.x -= 0.06;
-        }
-        xyorz = 'x';
-        isItEqualPi = rotateGroup.rotation.x - (PI / 2);
-        isAnimating = true;
-      }
-      if (upDownLeftOrRight === 'down') {
-        if (this.props.sound) {
-          cubeSound.play();
-        }
-        // for (let i = 0; i < yAxisGroup.length; i++) {
-        //   rotateGroup.attach(yAxisGroup[i]);
-        // }
-        rotateSideFunction = function() {
-          rotateGroup.rotation.x += 0.06;
-        }
-        xyorz = 'x';
-        isItEqualPi = rotateGroup.rotation.x + (PI / 2);
-        isAnimating = true;
-      }
 
     }
 
+    isAnimating = false;
     })
 
 
@@ -464,6 +524,7 @@ class Practice2Cube extends React.Component {
     }
     loadGltfs();
     //ending mini cubes finally and adding group of all of them to scene
+
     // scene.add(scene);
     // scene.position.set(0, 1, 0);
 
@@ -473,59 +534,44 @@ class Practice2Cube extends React.Component {
 
 //if it gets stuck when looking at the very bottom it could be that the raycasters in the very middle for the z slab are getting in the way? like the mouse is touching the ray so it thinks mouse is over cube? idk
 
-setTimeout(() => {
-  var xax = [];
-  for (let i = 0; i < scene.children.length; i++) {
-    if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.x > 1) {
-      xax.push(scene.children[i].children[0]);
-    }
-  }
+// setTimeout(() => {
+//   var xax = [];
+//   for (let i = 0; i < scene.children.length; i++) {
+//     if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.x > 1) {
+//       xax.push(scene.children[i].children[0]);
+//     }
+//   }
 
-//////////
-var rotato = xax[0].rotation;
-var tween1 = new TWEEN.Tween({rX: rotato.x})
-  .to( {rX: rotato.x + (PI / 2)}, 400)
-      .easing(TWEEN.Easing.Quintic.Out)
-  .onComplete(() => {
-    // remove cubes from group
-    console.log('scene children', scene.children);
-    console.log('xax', xax);
-    console.log('TWEEN COMPLETED :)))))))');
-  })
+// //////////
+// var rotato = xax[0].rotation;
+// var tween1 = new TWEEN.Tween({rX: rotato.x})
+//   .to( {rX: rotato.x + (PI / 2)}, 400)
+//       .easing(TWEEN.Easing.Quintic.Out)
+//   .onComplete(() => {
+//     console.log('TWEEN COMPLETED :)))))))');
+//   })
 
-  console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
-  console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
-tween1.onUpdate((object: {rX: number}, elapsed: number) => {
-  // scene.children[5].rotation.y = object.rY;
-  // scene.children[4].rotation.y = object.rY;
-    for (let i = 0; i < xax.length; i++) {
-      xax[i].parent.rotation.x = object.rX;
-      // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
-    }
-    // xax.rotation.y = object.rY;
-})
-
-tween1.start();
-
-}, 1000);
+// tween1.onUpdate((object: {rX: number}, elapsed: number) => {
+//   // scene.children[5].rotation.y = object.rY;
+//   // scene.children[4].rotation.y = object.rY;
+//     for (let i = 0; i < xax.length; i++) {
+//       xax[i].parent.rotation.x = object.rX;
+//       // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
+//     }
+//     // xax.rotation.y = object.rY;
+// })
 
 
-    let floatCompare = ( a, b ) => Math.abs(a-b)<.05;
+// tween1.start();
+
+// }, 1000);
 
     function animate(time) {
       requestAnimationFrame( animate );
       TWEEN.update(time);
+
       if (isAnimating) {
-        // rotateGroup.quaternion.slerp(rotationTargetGroup.quaternion, 0.2);
-        rotateSideFunction();
-        if (floatCompare(rotateGroup.rotation[xyorz], isItEqualPi)) {
-          isAnimating = false;
-          rotateGroup.rotation[xyorz] = isItEqualPi;
-        }
       } else {
-        while (rotateGroup.children.length) {
-          scene.attach(rotateGroup.children[0]);
-        }
       }
 
       controls.update();
