@@ -1,6 +1,5 @@
 import React from 'react';
 import Cube from './Cube.jsx';
-import PracticeCube from './PracticeCube.jsx';
 import Practice2Cube from './Practice2Cubelol.jsx';
 import style from './App.module.css';
 // import gradientLeft from '../pics/1.png';
@@ -120,7 +119,6 @@ class App extends React.Component {
           </div>
         </div>
         {/* <Cube sound={this.state.playSound}/> */}
-        {/* <PracticeCube /> */}
         <Practice2Cube />
         {/* {modalPopUp} */}
       </div>

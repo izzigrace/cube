@@ -36,10 +36,6 @@ import singlecube26 from '../models/oneCubeObjToOrg26.gltf';
 
 
 // fix (0, 1, 0) shit with scene vs wholeCube group
-
-
-
-//slabs of -z or +z etc to see location
 //function that takes in the click face and the rotation axis or right or left or whatever, then it rotates the with the information given
 
 class Practice2Cube extends React.Component {
@@ -96,18 +92,6 @@ class Practice2Cube extends React.Component {
     onWindowResize();
     window.addEventListener('resize', onWindowResize, false);
 
-    // window.addEventListener('pointerup', (event) => {
-    //   controls.enabled = false;
-    // })
-
-    //rotate on mouse scroll
-    // window.addEventListener('wheel', onMouseWheel, false);
-    // function onMouseWheel (event) {
-    //   // event.preventDefault();
-    //   scene.rotation.y += (event.deltaX) * 0.008;
-    //   scene.rotation.x += (event.deltaY) * 0.008;
-    // } sadly had to get rid of this
-
 
   const sceneRaycaster = new THREE.Raycaster();
 
@@ -133,7 +117,7 @@ class Practice2Cube extends React.Component {
       mouseOnCube = true;
     }
 
-    //setting last position of mouse
+    //setting last position of mouse (for after click to see which direction it moved)
     leftOrRight = (
       event.clientX > mouseLocOnDown.x ? 'right'
       : event.clientX < mouseLocOnDown.x ? 'left'
@@ -161,17 +145,8 @@ class Practice2Cube extends React.Component {
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
     var mouseLocOnDown = {x: null, y: null};
-    var yAxisGroup = [];
-    var xAxisGroup = [];
-    var pushIfNotExists = function(thing, array) {
-      if (!array.includes(thing)) {
-        array.push(thing);
-      }
-    }
 
     window.addEventListener('mousedown', (event) => {
-      xAxisGroup = [];
-      yAxisGroup = [];
 
       if (mouseOnCube) {
         dontDoMouseUp = false;
@@ -183,34 +158,127 @@ class Practice2Cube extends React.Component {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(scene);
-      console.log('ray direction', raycaster.ray.direction);
+      // const raycaster = new THREE.Raycaster();
+      // raycaster.setFromCamera(mouse, camera);
+      // const intersects = raycaster.intersectObject(scene);
+      // console.log('ray direction', raycaster.ray.direction);
 
       // controls.enabled = true;
       // if (intersects.length === 0) {
       //   return;
       // }
       // controls.enabled = false;
-      // console.log(scene.children);
 
-      // xAxisGroup.push(intersects[0].object.parent);
-      // yAxisGroup.push(intersects[0].object.parent);
+      //{face: __, upDownSlab: __, rightLeftSlab: __, up: axis or degrees?, down: same, right: same, left: same}
 
-      var facePoint = intersects[0].point;
-      console.log('intersects[0]', intersects[0].object.geometry);
-      console.log('this is the clicked cube', intersects[0].object.parent);
-      var positionArray = intersects[0].object.geometry.attributes.position.array;
-      var [x, y, z] = [positionArray[34*3], positionArray[34*3 + 1], positionArray[34*3 + 2]];
-      console.log(x, y, z);
-      console.log('this is the clicked cube position', x, y, z);
+      // console.log('this is the clicked cube', intersects[0].object.parent);
+
+      function getSlabs() {
+        var info = {face: '', upDown: {slab: '', rotate: ''}, rightLeft: {slab: '', rotate: ''}};
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(scene);
+        var facePoint = intersects[0].point;
+        console.log('facepoint', facePoint);
+
+        var highest = [facePoint.x, 'x'];
+        if (abs(facePoint.y) > abs(highest[0])) {
+          highest = [facePoint.y, 'y'];
+        };
+        if (abs(facePoint.z) > abs(highest[0])) {
+          highest = [facePoint.z, 'z'];
+        }
+        if (highest[0] > 0) {
+          info.face = highest[1];
+        } else {
+          info.face = '-' + highest[1];
+        }
+        console.log(info.face);
+
+        if (info.face === 'x' || info.face === '-x') {
+          if (facePoint.z < -1) {
+            info.upDown.slab = 'nz';
+            info.upDown.rotate = 'z';
+          } else if (facePoint.z > 1) {
+            info.upDown.slab = 'pz';
+            info.upDown.rotate = 'z';
+          } else {
+            info.upDown.slab = 'z';
+            info.upDown.rotate = 'z';
+          }
+
+          if (facePoint.y < -1) {
+            info.rightLeft.slab = 'ny';
+            info.rightLeft.rotate = 'y';
+          } else if (facePoint.y > 1) {
+            info.rightLeft.slab = 'py';
+            info.rightLeft.rotate = 'y';
+          } else {
+            info.rightLeft.slab = 'y';
+            info.rightLeft.rotate = 'y';
+          }
+        }
+
+        if (info.face === 'y' || info.face === '-y') {
+          if (facePoint.x < -1) {
+            info.upDown.slab = 'nx';
+            info.upDown.rotate = 'x';
+          } else if (facePoint.z > 1) {
+            info.upDown.slab = 'px';
+            info.upDown.rotate = 'x';
+          } else {
+            info.upDown.slab = 'x';
+            info.upDown.rotate = 'x';
+          }
+
+          if (facePoint.z < -1) {
+            info.rightLeft.slab = 'nz';
+            info.rightLeft.rotate = 'z';
+          } else if (facePoint.z > 1) {
+            info.rightLeft.slab = 'pz';
+            info.rightLeft.rotate = 'z';
+          } else {
+            info.rightLeft.slab = 'z';
+            info.rightLeft.rotate = 'z';
+          }
+        }
+
+        if (info.face === 'z' || info.face === '-z') {
+          if (facePoint.x < -1) {
+            info.upDown.slab = 'nx';
+            info.upDown.rotate = 'x';
+          } else if (facePoint.x > 1) {
+            info.upDown.slab = 'px';
+            info.upDown.rotate = 'x';
+          } else {
+            info.upDown.slab = 'x';
+            info.upDown.rotate = 'x';
+          }
+
+          if (facePoint.y < -1) {
+            info.rightLeft.slab = 'ny';
+            info.rightLeft.rotate = 'y';
+          } else if (facePoint.y > 1) {
+            info.rightLeft.slab = 'py';
+            info.rightLeft.rotate = 'y';
+          } else {
+            info.rightLeft.slab = 'y';
+            info.rightLeft.rotate = 'y';
+          }
+        }
+
+
+        console.log(info);
+        return info;
+
+      }
+      getSlabs();
 
 
     } else {
       dontDoMouseUp = true;
     }
-    // console.log('GROUP X', xAxisGroup);
-    // console.log('GROUP Y', yAxisGroup);
+
     });
     //make group at (0, 0) attach cubes to them, rotate, then attach them back to the parent
 
@@ -226,7 +294,6 @@ class Practice2Cube extends React.Component {
     var isItEqualPi;
 
     window.addEventListener('mouseup', (event) => {
-      // console.log(dontDoMouseUp);
       if (!dontDoMouseUp) {
       if (isAnimating) {
         return;
@@ -247,9 +314,9 @@ class Practice2Cube extends React.Component {
         if (this.props.sound) {
           cubeSound2.play();
         }
-        for (let i = 0; i < xAxisGroup.length; i++) {
-          rotateGroup.attach(xAxisGroup[i]);
-        }
+        // for (let i = 0; i < xAxisGroup.length; i++) {
+        //   rotateGroup.attach(xAxisGroup[i]);
+        // }
 
         rotateSideFunction = function() {
           rotateGroup.rotation.y += 0.06;
@@ -262,9 +329,9 @@ class Practice2Cube extends React.Component {
         if (this.props.sound) {
           cubeSound4.play();
         }
-        for (let i = 0; i < xAxisGroup.length; i++) {
-          rotateGroup.attach(xAxisGroup[i]);
-        }
+        // for (let i = 0; i < xAxisGroup.length; i++) {
+        //   rotateGroup.attach(xAxisGroup[i]);
+        // }
         rotateSideFunction = function() {
           rotateGroup.rotation.y -= 0.06;
         }
@@ -277,9 +344,9 @@ class Practice2Cube extends React.Component {
         if (this.props.sound) {
           cubeSound2.play();
         }
-        for (let i = 0; i < yAxisGroup.length; i++) {
-          rotateGroup.attach(yAxisGroup[i]);
-        }
+        // for (let i = 0; i < yAxisGroup.length; i++) {
+        //   rotateGroup.attach(yAxisGroup[i]);
+        // }
         rotateSideFunction = function() {
           rotateGroup.rotation.x -= 0.06;
         }
@@ -291,9 +358,9 @@ class Practice2Cube extends React.Component {
         if (this.props.sound) {
           cubeSound.play();
         }
-        for (let i = 0; i < yAxisGroup.length; i++) {
-          rotateGroup.attach(yAxisGroup[i]);
-        }
+        // for (let i = 0; i < yAxisGroup.length; i++) {
+        //   rotateGroup.attach(yAxisGroup[i]);
+        // }
         rotateSideFunction = function() {
           rotateGroup.rotation.x += 0.06;
         }
@@ -504,57 +571,6 @@ class Practice2Cube extends React.Component {
 
     console.log('SCENE CHILDREN', scene.children);
 
-
-    //raycaster from (0, 0, 0) to everycube, get direction and
-
-    setTimeout(() => {
-      var positions = {px: [], py: [], pz: [], x: [], y: [], z: [], nx: [], ny: [], nz: []};
-      var positionRay = new THREE.Raycaster();
-
-      positionRay.ray.origin.copy(new THREE.Vector3(2, 5, -2));
-      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
-      var intersectsAssignRay = positionRay.intersectObject(scene, true);
-      scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
-
-      for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.nz.push(intersectsAssignRay[i].object.parent.parent)
-        }
-      }
-//
-      positionRay.ray.origin.copy(new THREE.Vector3(0, 5, -2));
-      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
-      intersectsAssignRay = positionRay.intersectObject(scene, true);
-
-      scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
-
-      for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.nz.push(intersectsAssignRay[i].object.parent.parent)
-        }
-      }
-//
-      positionRay.ray.origin.copy(new THREE.Vector3(-2, 5, -2));
-      positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
-      intersectsAssignRay = positionRay.intersectObject(scene, true);
-
-      scene.add(new THREE.ArrowHelper(positionRay.ray.direction, positionRay.ray.origin, 300, 0xff0000) );
-
-      for (let i = 0; i < intersectsAssignRay.length; i++) {
-        if (!positions.nz.includes(intersectsAssignRay[i].object.parent.parent)) {
-          positions.nz.push(intersectsAssignRay[i].object.parent.parent)
-        }
-      }
-
-      console.log('x positions', positions.x);
-
-      for (let i = 0; i < positions.nz.length; i++) {
-        console.log('ppppppp', positions.nz[i].children[0]);
-        positions.nz[i].children[0].children[0].material.color.set(0xff0000);
-      }
-
-    }, 3000)
-
 ///////
 
 //if it gets stuck when looking at the very bottom it could be that the raycasters in the very middle for the z slab are getting in the way? like the mouse is touching the ray so it thinks mouse is over cube? idk
@@ -562,15 +578,15 @@ class Practice2Cube extends React.Component {
 setTimeout(() => {
   var xax = [];
   for (let i = 0; i < scene.children.length; i++) {
-    if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.y > 0) {
+    if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.x > 1) {
       xax.push(scene.children[i].children[0]);
     }
   }
 
 //////////
 var rotato = xax[0].rotation;
-var tween1 = new TWEEN.Tween({rY: rotato.y})
-  .to( {rY: rotato.y + (PI / 2)}, 400)
+var tween1 = new TWEEN.Tween({rX: rotato.x})
+  .to( {rX: rotato.x + (PI / 2)}, 400)
       .easing(TWEEN.Easing.Quintic.Out)
   .onComplete(() => {
     // remove cubes from group
@@ -581,11 +597,11 @@ var tween1 = new TWEEN.Tween({rY: rotato.y})
 
   console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
   console.log(xax[0].lookAt(new THREE.Vector3(0, 0, 0)));
-tween1.onUpdate((object: {rY: number}, elapsed: number) => {
+tween1.onUpdate((object: {rX: number}, elapsed: number) => {
   // scene.children[5].rotation.y = object.rY;
   // scene.children[4].rotation.y = object.rY;
     for (let i = 0; i < xax.length; i++) {
-      xax[i].parent.rotation.y = object.rY;
+      xax[i].parent.rotation.x = object.rX;
       // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
     }
     // xax.rotation.y = object.rY;

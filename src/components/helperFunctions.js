@@ -298,6 +298,106 @@ function getCubePositions(scene) {
 
 }
 
+function getSlabs(scene, mouse, camera) {
+  var raycaster = new THREE.Raycaster();
+  var info = {face: '', upDown: {slab: '', rotate: ''}, rightLeft: {slab: '', rotate: ''}};
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObject(scene);
+  var facePoint = intersects[0].point;
+  console.log('facepoint', facePoint);
+
+  var highest = [facePoint.x, 'x'];
+  if (Math.abs(facePoint.y) > Math.abs(highest[0])) {
+    highest = [facePoint.y, 'y'];
+  };
+  if (Math.abs(facePoint.z) > Math.abs(highest[0])) {
+    highest = [facePoint.z, 'z'];
+  }
+  if (highest[0] > 0) {
+    info.face = highest[1];
+  } else {
+    info.face = '-' + highest[1];
+  }
+  console.log(info.face);
+
+  if (info.face === 'x' || info.face === '-x') {
+    if (facePoint.z < -1) {
+      info.upDown.slab = 'nz';
+      info.upDown.rotate = 'z';
+    } else if (facePoint.z > 1) {
+      info.upDown.slab = 'pz';
+      info.upDown.rotate = 'z';
+    } else {
+      info.upDown.slab = 'z';
+      info.upDown.rotate = 'z';
+    }
+
+    if (facePoint.y < -1) {
+      info.rightLeft.slab = 'ny';
+      info.rightLeft.rotate = 'y';
+    } else if (facePoint.y > 1) {
+      info.rightLeft.slab = 'py';
+      info.rightLeft.rotate = 'y';
+    } else {
+      info.rightLeft.slab = 'y';
+      info.rightLeft.rotate = 'y';
+    }
+  }
+
+  if (info.face === 'y' || info.face === '-y') {
+    if (facePoint.x < -1) {
+      info.upDown.slab = 'nx';
+      info.upDown.rotate = 'x';
+    } else if (facePoint.z > 1) {
+      info.upDown.slab = 'px';
+      info.upDown.rotate = 'x';
+    } else {
+      info.upDown.slab = 'x';
+      info.upDown.rotate = 'x';
+    }
+
+    if (facePoint.z < -1) {
+      info.rightLeft.slab = 'nz';
+      info.rightLeft.rotate = 'z';
+    } else if (facePoint.z > 1) {
+      info.rightLeft.slab = 'pz';
+      info.rightLeft.rotate = 'z';
+    } else {
+      info.rightLeft.slab = 'z';
+      info.rightLeft.rotate = 'z';
+    }
+  }
+
+  if (info.face === 'z' || info.face === '-z') {
+    if (facePoint.x < -1) {
+      info.upDown.slab = 'nx';
+      info.upDown.rotate = 'x';
+    } else if (facePoint.x > 1) {
+      info.upDown.slab = 'px';
+      info.upDown.rotate = 'x';
+    } else {
+      info.upDown.slab = 'x';
+      info.upDown.rotate = 'x';
+    }
+
+    if (facePoint.y < -1) {
+      info.rightLeft.slab = 'ny';
+      info.rightLeft.rotate = 'y';
+    } else if (facePoint.y > 1) {
+      info.rightLeft.slab = 'py';
+      info.rightLeft.rotate = 'y';
+    } else {
+      info.rightLeft.slab = 'y';
+      info.rightLeft.rotate = 'y';
+    }
+  }
+
+  return info;
+
+}
+
 module.exoports = {
-  getCubePositions: getCubePositions
+  getCubePositions: getCubePositions,
+  getSlabs: getSlabs
 }
