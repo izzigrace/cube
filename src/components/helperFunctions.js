@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 
-function getCubePositions(scene) {
+function getCubePositions(scene, positionRay) {
   var positions = {px: [], py: [], pz: [], x: [], y: [], z: [], nx: [], ny: [], nz: []};
-  var positionRay = new THREE.Raycaster();
   var intersectsAssignRay
 
 //positive x slab
@@ -117,7 +116,6 @@ function getCubePositions(scene) {
   intersectsAssignRay = positionRay.intersectObject(scene, true);
 
   for (let i = 0; i < intersectsAssignRay.length; i++) {
-    console.log('erm', intersectsAssignRay[i].object.parent.parent);
     if (!positions.x.includes(intersectsAssignRay[i].object.parent.parent) && intersectsAssignRay[i].object.parent.parent.children.length < 20) {
       positions.x.push(intersectsAssignRay[i].object.parent.parent)
     }
@@ -150,7 +148,6 @@ function getCubePositions(scene) {
   intersectsAssignRay = positionRay.intersectObject(scene, true);
 
   for (let i = 0; i < intersectsAssignRay.length; i++) {
-    console.log('erm', intersectsAssignRay[i].object.parent.parent);
     if (!positions.y.includes(intersectsAssignRay[i].object.parent.parent) && intersectsAssignRay[i].object.parent.parent.children.length < 20) {
       positions.y.push(intersectsAssignRay[i].object.parent.parent)
     }
@@ -182,7 +179,6 @@ function getCubePositions(scene) {
   intersectsAssignRay = positionRay.intersectObject(scene, true);
 
   for (let i = 0; i < intersectsAssignRay.length; i++) {
-    console.log('erm', intersectsAssignRay[i].object.parent.parent);
     if (!positions.z.includes(intersectsAssignRay[i].object.parent.parent) && intersectsAssignRay[i].object.parent.parent.children.length < 20) {
       positions.z.push(intersectsAssignRay[i].object.parent.parent)
     }
@@ -298,8 +294,7 @@ function getCubePositions(scene) {
 
 }
 
-function getSlabs(scene, mouse, camera) {
-  var raycaster = new THREE.Raycaster();
+var getSlabs = function (scene, mouse, camera, raycaster) {
   var info = {face: '', upDown: {slab: '', rotate: ''}, rightLeft: {slab: '', rotate: ''}};
 
   raycaster.setFromCamera(mouse, camera);
@@ -397,7 +392,4 @@ function getSlabs(scene, mouse, camera) {
 
 }
 
-module.exoports = {
-  getCubePositions: getCubePositions,
-  getSlabs: getSlabs
-}
+export { getCubePositions, getSlabs }

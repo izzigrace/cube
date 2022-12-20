@@ -33,6 +33,7 @@ import singlecube23 from '../models/oneCubeObjToOrg23.gltf';
 import singlecube24 from '../models/oneCubeObjToOrg24.gltf';
 import singlecube25 from '../models/oneCubeObjToOrg25.gltf';
 import singlecube26 from '../models/oneCubeObjToOrg26.gltf';
+import { getCubePositions, getSlabs } from './helperFunctions';
 
 
 // fix (0, 1, 0) shit with scene vs wholeCube group
@@ -145,6 +146,11 @@ class Practice2Cube extends React.Component {
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
     var mouseLocOnDown = {x: null, y: null};
+    var positionRay = new THREE.Raycaster();
+
+    var positions = getCubePositions(scene, raycaster);
+    console.log('posiyions', positions);
+
 
     window.addEventListener('mousedown', (event) => {
 
@@ -158,121 +164,13 @@ class Practice2Cube extends React.Component {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      // const raycaster = new THREE.Raycaster();
-      // raycaster.setFromCamera(mouse, camera);
-      // const intersects = raycaster.intersectObject(scene);
-      // console.log('ray direction', raycaster.ray.direction);
-
-      // controls.enabled = true;
-      // if (intersects.length === 0) {
-      //   return;
-      // }
-      // controls.enabled = false;
-
-      //{face: __, upDownSlab: __, rightLeftSlab: __, up: axis or degrees?, down: same, right: same, left: same}
-
-      // console.log('this is the clicked cube', intersects[0].object.parent);
-
-      function getSlabs() {
-        var info = {face: '', upDown: {slab: '', rotate: ''}, rightLeft: {slab: '', rotate: ''}};
-
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObject(scene);
-        var facePoint = intersects[0].point;
-        console.log('facepoint', facePoint);
-
-        var highest = [facePoint.x, 'x'];
-        if (abs(facePoint.y) > abs(highest[0])) {
-          highest = [facePoint.y, 'y'];
-        };
-        if (abs(facePoint.z) > abs(highest[0])) {
-          highest = [facePoint.z, 'z'];
-        }
-        if (highest[0] > 0) {
-          info.face = highest[1];
-        } else {
-          info.face = '-' + highest[1];
-        }
-        console.log(info.face);
-
-        if (info.face === 'x' || info.face === '-x') {
-          if (facePoint.z < -1) {
-            info.upDown.slab = 'nz';
-            info.upDown.rotate = 'z';
-          } else if (facePoint.z > 1) {
-            info.upDown.slab = 'pz';
-            info.upDown.rotate = 'z';
-          } else {
-            info.upDown.slab = 'z';
-            info.upDown.rotate = 'z';
-          }
-
-          if (facePoint.y < -1) {
-            info.rightLeft.slab = 'ny';
-            info.rightLeft.rotate = 'y';
-          } else if (facePoint.y > 1) {
-            info.rightLeft.slab = 'py';
-            info.rightLeft.rotate = 'y';
-          } else {
-            info.rightLeft.slab = 'y';
-            info.rightLeft.rotate = 'y';
-          }
-        }
-
-        if (info.face === 'y' || info.face === '-y') {
-          if (facePoint.x < -1) {
-            info.upDown.slab = 'nx';
-            info.upDown.rotate = 'x';
-          } else if (facePoint.z > 1) {
-            info.upDown.slab = 'px';
-            info.upDown.rotate = 'x';
-          } else {
-            info.upDown.slab = 'x';
-            info.upDown.rotate = 'x';
-          }
-
-          if (facePoint.z < -1) {
-            info.rightLeft.slab = 'nz';
-            info.rightLeft.rotate = 'z';
-          } else if (facePoint.z > 1) {
-            info.rightLeft.slab = 'pz';
-            info.rightLeft.rotate = 'z';
-          } else {
-            info.rightLeft.slab = 'z';
-            info.rightLeft.rotate = 'z';
-          }
-        }
-
-        if (info.face === 'z' || info.face === '-z') {
-          if (facePoint.x < -1) {
-            info.upDown.slab = 'nx';
-            info.upDown.rotate = 'x';
-          } else if (facePoint.x > 1) {
-            info.upDown.slab = 'px';
-            info.upDown.rotate = 'x';
-          } else {
-            info.upDown.slab = 'x';
-            info.upDown.rotate = 'x';
-          }
-
-          if (facePoint.y < -1) {
-            info.rightLeft.slab = 'ny';
-            info.rightLeft.rotate = 'y';
-          } else if (facePoint.y > 1) {
-            info.rightLeft.slab = 'py';
-            info.rightLeft.rotate = 'y';
-          } else {
-            info.rightLeft.slab = 'y';
-            info.rightLeft.rotate = 'y';
-          }
-        }
+      var info = getSlabs(scene, mouse, camera, raycaster);
+      console.log(info);
 
 
-        console.log(info);
-        return info;
+      function rotateSlab(face, slab, rotateAxis) {
 
       }
-      getSlabs();
 
 
     } else {
