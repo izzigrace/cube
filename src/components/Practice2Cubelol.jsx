@@ -213,107 +213,107 @@ class Practice2Cube extends React.Component {
         //do something else and return before rest of function if face is top or bottom
 
         if (upDownLeftOrRight === 'right') {
-          var rotato = positions[info.rightLeft.slab][0].parent.rotation;
-          var tween1 = new TWEEN.Tween({rY: rotato.y})
-            .to( {rY: rotato.y + (PI / 2)}, 400)
-                .easing(TWEEN.Easing.Quintic.Out)
-            .onComplete(() => {
-              isAnimating = false;
-            })
-          tween1.onUpdate((object: {rY: number}, elapsed: number) => {
-              for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
-                // positions[info.rightLeft.slab][i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), object.rY);
-                // positions[info.rightLeft.slab][i].rotateY(object.rY);
+          var rotato;
+          var tween1;
+          for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
+            rotato = positions[info.rightLeft.slab][i].parent.rotation;
+            tween1 = new TWEEN.Tween({rY: rotato.y})
+              .to( {rY: rotato.y + (PI / 2)}, 400)
+                  .easing(TWEEN.Easing.Quintic.Out)
+              .onComplete(() => {
+
+              })
+            tween1.onUpdate((object: {rY: number}, elapsed: number) => {
+                  // positions[info.rightLeft.slab][i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), object.rY);
+                  // positions[info.rightLeft.slab][i].rotateY(object.rY);
                 positions[info.rightLeft.slab][i].parent.rotation.y = object.rY;
-              }
-          })
-          tween1.start();
+            })
+            tween1.start();
+
+          }
+
         }
 
         if (upDownLeftOrRight === 'left') {
-          rotato = positions[info.rightLeft.slab][0].parent.rotation;
-          tween1 = new TWEEN.Tween({rY: rotato.y})
-            .to( {rY: rotato.y - (PI / 2)}, 400)
-                .easing(TWEEN.Easing.Quintic.Out)
-            .onComplete(() => {
-              isAnimating = false;
-            })
-          tween1.onUpdate((object: {rY: number}, elapsed: number) => {
-              for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
+          for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
+            rotato = positions[info.rightLeft.slab][i].parent.rotation;
+            tween1 = new TWEEN.Tween({rY: rotato.y})
+              .to( {rY: rotato.y - (PI / 2)}, 400)
+                  .easing(TWEEN.Easing.Quintic.Out)
+              .onComplete(() => {
+              })
+            tween1.onUpdate((object: {rY: number}, elapsed: number) => {
                 positions[info.rightLeft.slab][i].parent.rotation.y = object.rY;
-              }
-          })
-          tween1.start();
+            })
+            tween1.start();
+          }
         }
         ///
 
         if (info.face === 'z') {
           if (upDownLeftOrRight === 'up') {
-            rotato = positions[info.upDown.slab][0].parent.rotation;
-            tween1 = new TWEEN.Tween({rX: rotato.x})
-              .to( {rX: rotato.x - (PI / 2)}, 400)
-                  .easing(TWEEN.Easing.Quintic.Out)
-              .onComplete(() => {
-                isAnimating = false;
-              })
-            tween1.onUpdate((object: {rX: number}, elapsed: number) => {
-                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+              rotato = positions[info.upDown.slab][i].parent.rotation;
+              tween1 = new TWEEN.Tween({rX: rotato.x})
+                .to( {rX: rotato.x - (PI / 2)}, 400)
+                    .easing(TWEEN.Easing.Quintic.Out)
+                .onComplete(() => {
+                })
+              tween1.onUpdate((object: {rX: number}, elapsed: number) => {
                   positions[info.upDown.slab][i].parent.rotation.x = object.rX;
-                  // positions[info.upDown.slab][i].setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), object.rX);
-                  // positions[info.upDown.slab][i].rotateX(object.rX);
-                }
-            })
-            tween1.start();
+              })
+              tween1.start();
+            }
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotato = positions[info.upDown.slab][0].parent.rotation;
-            tween1 = new TWEEN.Tween({rX: rotato.x})
-              .to( {rX: rotato.x + (PI / 2)}, 400)
-                  .easing(TWEEN.Easing.Quintic.Out)
-              .onComplete(() => {
-                isAnimating = false;
-              })
-            tween1.onUpdate((object: {rX: number}, elapsed: number) => {
-                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+              rotato = positions[info.upDown.slab][i].parent.rotation;
+              tween1 = new TWEEN.Tween({rX: rotato.x})
+                .to( {rX: rotato.x + (PI / 2)}, 400)
+                    .easing(TWEEN.Easing.Quintic.Out)
+                .onComplete(() => {
+
+                })
+              tween1.onUpdate((object: {rX: number}, elapsed: number) => {
                   positions[info.upDown.slab][i].parent.rotation.x = object.rX;
-                }
-            })
-            tween1.start();
+              })
+              tween1.start();
+            }
           }
         }
 
         if (info.face === '-x') {
           if (upDownLeftOrRight === 'up') {
-            rotato = positions[info.upDown.slab][0].parent.rotation;
-            tween1 = new TWEEN.Tween({rZ: rotato.z})
-              .to( {rZ: rotato.z - (PI / 2)}, 400)
-                  .easing(TWEEN.Easing.Quintic.Out)
-              .onComplete(() => {
-                isAnimating = false;
-              })
-            tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
-                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+              rotato = positions[info.upDown.slab][i].parent.rotation;
+              tween1 = new TWEEN.Tween({rZ: rotato.z})
+                .to( {rZ: rotato.z - (PI / 2)}, 400)
+                    .easing(TWEEN.Easing.Quintic.Out)
+                .onComplete(() => {
+
+                })
+              tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
                   positions[info.upDown.slab][i].parent.rotation.z = object.rZ;
-                }
-            })
-            tween1.start();
+              })
+              tween1.start();
+            }
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotato = positions[info.upDown.slab][0].parent.rotation;
-            tween1 = new TWEEN.Tween({rZ: rotato.z})
-              .to( {rZ: rotato.z + (PI / 2)}, 400)
-                  .easing(TWEEN.Easing.Quintic.Out)
-              .onComplete(() => {
-                isAnimating = false;
-              })
-            tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
-                for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
+              rotato = positions[info.upDown.slab][i].parent.rotation;
+              tween1 = new TWEEN.Tween({rZ: rotato.z})
+                .to( {rZ: rotato.z + (PI / 2)}, 400)
+                    .easing(TWEEN.Easing.Quintic.Out)
+                .onComplete(() => {
+
+                })
+              tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
                   positions[info.upDown.slab][i].parent.rotation.z = object.rZ;
-                }
-            })
-            tween1.start();
+              })
+              tween1.start();
+            }
           }
         }
 
