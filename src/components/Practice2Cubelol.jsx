@@ -103,11 +103,20 @@ class Practice2Cube extends React.Component {
   var leftOrRight = '';
   var upOrDown = '';
   var upDownLeftOrRight = '';
+  var threeX = '';
+  var threeY = '';
+  var threeZ = '';
+
+  var highest = threeX;
+  var whichAxis = 'x';
+
   var dontDoMouseUp = false;
 
   function shuffle(history) {
 
   }
+
+  var threeSpaceMouseLocOnMove;
 
   window.addEventListener('mousemove', (event) => {
     //seeing if mouse is over cube, disabling orbit controls if it is
@@ -122,6 +131,12 @@ class Practice2Cube extends React.Component {
     } else {
       controls.enableRotate = false;
       mouseOnCube = true;
+
+      //get  three dimensional location of mouse
+      var threeSpaceMouseLocRayOnMove = new THREE.Raycaster();
+      threeSpaceMouseLocRayOnMove.setFromCamera(mouse, camera);
+      var threeSpaceMouseIntersectsOnMove = threeSpaceMouseLocRayOnMove.intersectObject(scene);
+      threeSpaceMouseLocOnMove = threeSpaceMouseIntersectsOnMove[0].point;
     }
 
     //setting last position of mouse (for after click to see which direction it moved)
@@ -146,12 +161,31 @@ class Practice2Cube extends React.Component {
       upDownLeftOrRight = upOrDown;
     }
 
+
+    threeX = threeSpaceMouseLocOnMove.x - threeSpaceMouseLocOnDown.x;
+    threeY = threeSpaceMouseLocOnMove.y - threeSpaceMouseLocOnDown.y;
+    threeZ = threeSpaceMouseLocOnMove.z - threeSpaceMouseLocOnDown.z;
+
+    if (threeY > highest) {
+      highest = threeY;
+      whichAxis = 'y';
+    }
+    if (threeZ > highest) {
+      highest = threeZ;
+      whichAxis = 'z';
+    }
+
+    if (threeSpaceMouseLocOnMove[whichAxis] - threeSpaceMouseLocOnDown[whichAxis] < 0) {
+      whichAxis = '-' + whichAxis;
+    }
+
   })
 
     //make raycaster
     const mouse = new THREE.Vector2();
     var mouseLocOnDown = {x: null, y: null};
     var info;
+    var threeSpaceMouseLocOnDown;
 
 
     window.addEventListener('mousedown', (event) => {
@@ -168,6 +202,12 @@ class Practice2Cube extends React.Component {
 
       info = getSlabs(scene, mouse, camera, raycaster);
 
+      var threeSpaceMouseLocRay = new THREE.Raycaster();
+      threeSpaceMouseLocRay.setFromCamera(mouse, camera);
+      var threeSpaceMouseIntersects = threeSpaceMouseLocRay.intersectObject(scene);
+      threeSpaceMouseLocOnDown = threeSpaceMouseIntersects[0].point;
+      console.log('threemouselocOnDown', threeSpaceMouseLocOnDown);
+
 
     } else {
       dontDoMouseUp = true;
@@ -175,12 +215,6 @@ class Practice2Cube extends React.Component {
 
     });
 
-    var rotateGroup = new THREE.Group();
-    scene.add(rotateGroup);
-    rotateGroup.position.set(0, 1, 0);
-    var rotationTargetGroup = new THREE.Group();
-    rotationTargetGroup.position.set(0, 1, 0);
-    scene.add(rotationTargetGroup);
     var isAnimating = false;
 
     const raycaster = new THREE.Raycaster();
@@ -200,8 +234,6 @@ class Practice2Cube extends React.Component {
 
       function rotateSlab(info, history) {
         isAnimating = true;
-
-        //do something else and return before rest of function if face is top or bottom
 
         function rotateSide(axis, rAxis, side, angle) {
           var tween1;
@@ -231,6 +263,7 @@ class Practice2Cube extends React.Component {
 
         if (upDownLeftOrRight === 'right') {
           rotateSide('y', 'rY', 'rightLeft', (PI / 2));
+          console.log(camera.rotation);
         }
 
         if (upDownLeftOrRight === 'left') {
