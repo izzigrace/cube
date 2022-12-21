@@ -194,126 +194,85 @@ class Practice2Cube extends React.Component {
       var positionRay = new THREE.Raycaster();
       getCubePositions(scene, positionRay);
       var positions = getCubePositions(scene, positionRay);
-      // console.log('posiyions', positions);
-      // console.log(info);
+
       var history = [];
 
-      console.log('rotation', positions[info.rightLeft.slab][0].parent.rotation);
-      var wtf = new THREE.Raycaster();
-      wtf.setFromCamera(mouse, camera);
-      const intersecting = wtf.intersectObjects(scene.children);
-      // console.log('wtf', intersecting[0].object.position);
-      // console.log('wtf', intersecting[0].object.parent.rotation);
-
-      // console.log('rotation', positions[info.rightLeft.slab][0].parent.rotation);
 
       function rotateSlab(info, history) {
         isAnimating = true;
 
         //do something else and return before rest of function if face is top or bottom
 
-        if (upDownLeftOrRight === 'right') {
-          var rotato;
+        function rotateSide(axis, rAxis, side, angle) {
           var tween1;
-          for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
-            rotato = positions[info.rightLeft.slab][i].parent.rotation;
-            tween1 = new TWEEN.Tween({rY: rotato.y})
-              .to( {rY: rotato.y + (PI / 2)}, 400)
-                  .easing(TWEEN.Easing.Quintic.Out)
-              .onComplete(() => {
+          var rotato = new THREE.Group();
+          scene.attach(rotato);
+          var rotatoArr = [];
 
-              })
-            tween1.onUpdate((object: {rY: number}, elapsed: number) => {
-                  // positions[info.rightLeft.slab][i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), object.rY);
-                  // positions[info.rightLeft.slab][i].rotateY(object.rY);
-                positions[info.rightLeft.slab][i].parent.rotation.y = object.rY;
-            })
-            tween1.start();
-
+          for (let i = 0; i < positions[info[side].slab].length; i++) {
+            rotato.attach(positions[info[side].slab][i]);
+            rotatoArr.push(positions[info[side].slab][i]);
           }
 
+          tween1 = new TWEEN.Tween({[rAxis]: 0})
+            .to( {[rAxis]: angle}, 400)
+            .easing(TWEEN.Easing.Quintic.Out)
+            .onComplete(() => {
+              for (let i = 0; i < rotatoArr.length; i++) {
+                scene.attach(rotatoArr[i]);
+              }
+              scene.remove(rotato);
+            })
+          tween1.onUpdate((object: {[rAxis]: number}, elapsed: number) => {
+              rotato.rotation[axis] = object[rAxis];
+          })
+          tween1.start();
+        }
+
+        if (upDownLeftOrRight === 'right') {
+          rotateSide('y', 'rY', 'rightLeft', (PI / 2));
         }
 
         if (upDownLeftOrRight === 'left') {
-          for (let i = 0; i < positions[info.rightLeft.slab].length; i++) {
-            rotato = positions[info.rightLeft.slab][i].parent.rotation;
-            tween1 = new TWEEN.Tween({rY: rotato.y})
-              .to( {rY: rotato.y - (PI / 2)}, 400)
-                  .easing(TWEEN.Easing.Quintic.Out)
-              .onComplete(() => {
-              })
-            tween1.onUpdate((object: {rY: number}, elapsed: number) => {
-                positions[info.rightLeft.slab][i].parent.rotation.y = object.rY;
-            })
-            tween1.start();
-          }
+          rotateSide('y', 'rY', 'rightLeft', -(PI / 2));
+          console.log(scene.children);
         }
-        ///
 
         if (info.face === 'z') {
           if (upDownLeftOrRight === 'up') {
-            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
-              rotato = positions[info.upDown.slab][i].parent.rotation;
-              tween1 = new TWEEN.Tween({rX: rotato.x})
-                .to( {rX: rotato.x - (PI / 2)}, 400)
-                    .easing(TWEEN.Easing.Quintic.Out)
-                .onComplete(() => {
-                })
-              tween1.onUpdate((object: {rX: number}, elapsed: number) => {
-                  positions[info.upDown.slab][i].parent.rotation.x = object.rX;
-              })
-              tween1.start();
-            }
+            rotateSide('x', 'rX', 'upDown', -(PI / 2));
           }
 
           if (upDownLeftOrRight === 'down') {
-            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
-              rotato = positions[info.upDown.slab][i].parent.rotation;
-              tween1 = new TWEEN.Tween({rX: rotato.x})
-                .to( {rX: rotato.x + (PI / 2)}, 400)
-                    .easing(TWEEN.Easing.Quintic.Out)
-                .onComplete(() => {
+            rotateSide('x', 'rX', 'upDown', (PI / 2));
+          }
+        }
+        if (info.face === '-z') {
+          if (upDownLeftOrRight === 'up') {
+            rotateSide('x', 'rX', 'upDown', (PI / 2));
+          }
 
-                })
-              tween1.onUpdate((object: {rX: number}, elapsed: number) => {
-                  positions[info.upDown.slab][i].parent.rotation.x = object.rX;
-              })
-              tween1.start();
-            }
+          if (upDownLeftOrRight === 'down') {
+            rotateSide('x', 'rX', 'upDown', -(PI / 2));
           }
         }
 
         if (info.face === '-x') {
           if (upDownLeftOrRight === 'up') {
-            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
-              rotato = positions[info.upDown.slab][i].parent.rotation;
-              tween1 = new TWEEN.Tween({rZ: rotato.z})
-                .to( {rZ: rotato.z - (PI / 2)}, 400)
-                    .easing(TWEEN.Easing.Quintic.Out)
-                .onComplete(() => {
-
-                })
-              tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
-                  positions[info.upDown.slab][i].parent.rotation.z = object.rZ;
-              })
-              tween1.start();
-            }
+            rotateSide('z', 'rZ', 'upDown', -(PI / 2));
           }
 
           if (upDownLeftOrRight === 'down') {
-            for (let i = 0; i < positions[info.upDown.slab].length; i++) {
-              rotato = positions[info.upDown.slab][i].parent.rotation;
-              tween1 = new TWEEN.Tween({rZ: rotato.z})
-                .to( {rZ: rotato.z + (PI / 2)}, 400)
-                    .easing(TWEEN.Easing.Quintic.Out)
-                .onComplete(() => {
+            rotateSide('z', 'rZ', 'upDown', (PI / 2));
+          }
+        }
+        if (info.face === 'x') {
+          if (upDownLeftOrRight === 'up') {
+            rotateSide('z', 'rZ', 'upDown', (PI / 2));
+          }
 
-                })
-              tween1.onUpdate((object: {rZ: number}, elapsed: number) => {
-                  positions[info.upDown.slab][i].parent.rotation.z = object.rZ;
-              })
-              tween1.start();
-            }
+          if (upDownLeftOrRight === 'down') {
+            rotateSide('z', 'rZ', 'upDown', -(PI / 2));
           }
         }
 
@@ -339,186 +298,134 @@ class Practice2Cube extends React.Component {
 
     function loadGltfs () {
       const gltfLoader = new GLTFLoader();
-      var groupOfCube1 = new THREE.Group();
-      scene.add(groupOfCube1);
-      var groupOfCube2 = new THREE.Group();
-      scene.add(groupOfCube2);
-      var groupOfCube3 = new THREE.Group();
-      scene.add(groupOfCube3);
-      var groupOfCube4 = new THREE.Group();
-      scene.add(groupOfCube4);
-      var groupOfCube5 = new THREE.Group();
-      scene.add(groupOfCube5);
-      var groupOfCube6 = new THREE.Group();
-      scene.add(groupOfCube6);
-      var groupOfCube7 = new THREE.Group();
-      scene.add(groupOfCube7);
-      var groupOfCube8 = new THREE.Group();
-      scene.add(groupOfCube8);
-      var groupOfCube9 = new THREE.Group();
-      scene.add(groupOfCube9);
-      var groupOfCube10 = new THREE.Group();
-      scene.add(groupOfCube10);
-      var groupOfCube11 = new THREE.Group();
-      scene.add(groupOfCube11);
-      var groupOfCube12 = new THREE.Group();
-      scene.add(groupOfCube12);
-      var groupOfCube13 = new THREE.Group();
-      scene.add(groupOfCube13);
-      var groupOfCube14 = new THREE.Group();
-      scene.add(groupOfCube14);
-      var groupOfCube15 = new THREE.Group();
-      scene.add(groupOfCube15);
-      var groupOfCube16 = new THREE.Group();
-      scene.add(groupOfCube16);
-      var groupOfCube17 = new THREE.Group();
-      scene.add(groupOfCube17);
-      var groupOfCube18 = new THREE.Group();
-      scene.add(groupOfCube18);
-      var groupOfCube19 = new THREE.Group();
-      scene.add(groupOfCube19);
-      var groupOfCube20 = new THREE.Group();
-      scene.add(groupOfCube20);
-      var groupOfCube21 = new THREE.Group();
-      scene.add(groupOfCube21);
-      var groupOfCube22 = new THREE.Group();
-      scene.add(groupOfCube22);
-      var groupOfCube23 = new THREE.Group();
-      scene.add(groupOfCube23);
-      var groupOfCube24 = new THREE.Group();
-      scene.add(groupOfCube24);
-      var groupOfCube25 = new THREE.Group();
-      scene.add(groupOfCube25);
-      var groupOfCube26 = new THREE.Group();
-      scene.add(groupOfCube26);
       gltfLoader.load(singlecube1, function(gltf) {
         let cube1 = gltf.scene;
-        groupOfCube1.attach(cube1);
+        scene.attach(cube1);
         cube1.name = 'cube1';
       });
       gltfLoader.load(singlecube2, function(gltf) {
         let cube2 = gltf.scene;
-        groupOfCube2.attach(cube2);
+        scene.attach(cube2);
         cube2.name = 'cube2';
       });
       gltfLoader.load(singlecube3, function(gltf) {
         let cube3 = gltf.scene;
-        groupOfCube3.attach(cube3);
+        scene.attach(cube3);
         cube3.name = 'cube3';
       });
       gltfLoader.load(singlecube4, function(gltf) {
         let cube4 = gltf.scene;
-        groupOfCube4.attach(cube4);
+        scene.attach(cube4);
         cube4.name = 'cube4';
       });
       gltfLoader.load(singlecube5, function(gltf) {
         let cube5 = gltf.scene;
-        groupOfCube5.attach(cube5);
+        scene.attach(cube5);
         cube5.name = 'cube5';
       });
       gltfLoader.load(singlecube6, function(gltf) {
         let cube6 = gltf.scene;
-        groupOfCube6.attach(cube6);
+        scene.attach(cube6);
         cube6.name = 'cube6';
       });
       gltfLoader.load(singlecube7, function(gltf) {
         let cube7 = gltf.scene;
-        groupOfCube7.attach(cube7);
+        scene.attach(cube7);
         cube7.name = 'cube7';
       });
       gltfLoader.load(singlecube8, function(gltf) {
         let cube8 = gltf.scene;
-        groupOfCube8.attach(cube8);
+        scene.attach(cube8);
         cube8.name = 'cube8';
       });
       gltfLoader.load(singlecube9, function(gltf) {
         let cube9 = gltf.scene;
-        groupOfCube9.attach(cube9);
+        scene.attach(cube9);
         cube9.name = 'cube9';
       });
       gltfLoader.load(singlecube10, function(gltf) {
         let cube10 = gltf.scene;
-        groupOfCube10.attach(cube10);
+        scene.attach(cube10);
         cube10.name = 'cube10';
       });
       gltfLoader.load(singlecube11, function(gltf) {
         let cube11 = gltf.scene;
-        groupOfCube11.attach(cube11);
+        scene.attach(cube11);
         cube11.name = 'cube11';
       });
       gltfLoader.load(singlecube12, function(gltf) {
         let cube12 = gltf.scene;
-        groupOfCube12.attach(cube12);
+        scene.attach(cube12);
         cube12.name = 'cube12';
       });
       gltfLoader.load(singlecube13, function(gltf) {
         let cube13 = gltf.scene;
-        groupOfCube13.attach(cube13);
+        scene.attach(cube13);
         cube13.name = 'cube13';
       });
       gltfLoader.load(singlecube14, function(gltf) {
         let cube14 = gltf.scene;
-        groupOfCube14.attach(cube14);
+        scene.attach(cube14);
         cube14.name = 'cube14';
       });
       gltfLoader.load(singlecube15, function(gltf) {
         let cube15 = gltf.scene;
-        groupOfCube15.attach(cube15);
+        scene.attach(cube15);
         cube15.name = 'cube15';
       });
       gltfLoader.load(singlecube16, function(gltf) {
         let cube16 = gltf.scene;
-        groupOfCube16.attach(cube16);
+        scene.attach(cube16);
         cube16.name = 'cube16';
       });
       gltfLoader.load(singlecube17, function(gltf) {
         let cube17 = gltf.scene;
-        groupOfCube17.attach(cube17);
+        scene.attach(cube17);
         cube17.name = 'cube17';
       });
       gltfLoader.load(singlecube18, function(gltf) {
         let cube18 = gltf.scene;
-        groupOfCube18.attach(cube18);
+        scene.attach(cube18);
         cube18.name = 'cube18';
       });
       gltfLoader.load(singlecube19, function(gltf) {
         let cube19 = gltf.scene;
-        groupOfCube19.attach(cube19);
+        scene.attach(cube19);
         cube19.name = 'cube19';
       });
       gltfLoader.load(singlecube20, function(gltf) {
         let cube20 = gltf.scene;
-        groupOfCube20.attach(cube20);
+        scene.attach(cube20);
         cube20.name = 'cube20';
       });
       gltfLoader.load(singlecube21, function(gltf) {
         let cube21 = gltf.scene;
-        groupOfCube21.attach(cube21);
+        scene.attach(cube21);
         cube21.name = 'cube21';
       });
       gltfLoader.load(singlecube22, function(gltf) {
         let cube22 = gltf.scene;
-        groupOfCube22.attach(cube22);
+        scene.attach(cube22);
         cube22.name = 'cube22';
       });
       gltfLoader.load(singlecube23, function(gltf) {
         let cube23 = gltf.scene;
-        groupOfCube23.attach(cube23);
+        scene.attach(cube23);
         cube23.name = 'cube23';
       });
       gltfLoader.load(singlecube24, function(gltf) {
         let cube24 = gltf.scene;
-        groupOfCube24.attach(cube24);
+        scene.attach(cube24);
         cube24.name = 'cube24';
       });
       gltfLoader.load(singlecube25, function(gltf) {
         let cube25 = gltf.scene;
-        groupOfCube25.attach(cube25);
+        scene.attach(cube25);
         cube25.name = 'cube25';
       });
       gltfLoader.load(singlecube26, function(gltf) {
         let cube26 = gltf.scene;
-        groupOfCube26.attach(cube26);
+        scene.attach(cube26);
         cube26.name = 'cube26';
       });
     }
@@ -534,37 +441,6 @@ class Practice2Cube extends React.Component {
 
 //if it gets stuck when looking at the very bottom it could be that the raycasters in the very middle for the z slab are getting in the way? like the mouse is touching the ray so it thinks mouse is over cube? idk
 
-// setTimeout(() => {
-//   var xax = [];
-//   for (let i = 0; i < scene.children.length; i++) {
-//     if (scene.children[i].children[0] && scene.children[i].children[0].children[0].position.x > 1) {
-//       xax.push(scene.children[i].children[0]);
-//     }
-//   }
-
-// //////////
-// var rotato = xax[0].rotation;
-// var tween1 = new TWEEN.Tween({rX: rotato.x})
-//   .to( {rX: rotato.x + (PI / 2)}, 400)
-//       .easing(TWEEN.Easing.Quintic.Out)
-//   .onComplete(() => {
-//     console.log('TWEEN COMPLETED :)))))))');
-//   })
-
-// tween1.onUpdate((object: {rX: number}, elapsed: number) => {
-//   // scene.children[5].rotation.y = object.rY;
-//   // scene.children[4].rotation.y = object.rY;
-//     for (let i = 0; i < xax.length; i++) {
-//       xax[i].parent.rotation.x = object.rX;
-//       // xax[i].rotateOnWorldAxis (new THREE.Vector3(), object.rY );
-//     }
-//     // xax.rotation.y = object.rY;
-// })
-
-
-// tween1.start();
-
-// }, 1000);
 
     function animate(time) {
       requestAnimationFrame( animate );
