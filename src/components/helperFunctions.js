@@ -344,7 +344,7 @@ var getSlabs = function (scene, mouse, camera, raycaster) {
     if (facePoint.x < -1) {
       info.upDown.slab = 'nx';
       info.upDown.rotate = 'x';
-    } else if (facePoint.z > 1) {
+    } else if (facePoint.x > 1) {
       info.upDown.slab = 'px';
       info.upDown.rotate = 'x';
     } else {

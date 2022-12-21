@@ -212,7 +212,6 @@ class Practice2Cube extends React.Component {
       threeSpaceMouseLocRay.setFromCamera(mouse, camera);
       var threeSpaceMouseIntersects = threeSpaceMouseLocRay.intersectObject(scene);
       threeSpaceMouseLocOnDown = threeSpaceMouseIntersects[0].point;
-      console.log('threemouselocOnDown', threeSpaceMouseLocOnDown);
 
 
     } else {
@@ -268,6 +267,41 @@ class Practice2Cube extends React.Component {
           tween1.start();
         }
 
+        if (info.face === 'y') {
+          if (whichAxis === 'x') {
+            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2));
+          }
+          if (whichAxis === '-x') {
+            rotateSide('z', 'rZ', 'rightLeft', (PI / 2));
+          }
+          if (whichAxis === 'z') {
+            rotateSide('x', 'rX', 'upDown', (PI / 2));
+          }
+          if (whichAxis === '-z') {
+            rotateSide('x', 'rX', 'upDown', -(PI / 2));
+          }
+          isAnimating = false;
+          return;
+        }
+        if (info.face === '-y') {
+          if (whichAxis === 'x') {
+            rotateSide('z', 'rZ', 'rightLeft', (PI / 2));
+          }
+          if (whichAxis === '-x') {
+            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2));
+          }
+          if (whichAxis === 'z') {
+            rotateSide('x', 'rX', 'upDown', -(PI / 2));
+          }
+          if (whichAxis === '-z') {
+            rotateSide('x', 'rX', 'upDown', (PI / 2));
+          }
+          isAnimating = false;
+          return;
+        }
+
+        console.log('return didnt work');
+
         if (upDownLeftOrRight === 'right') {
           rotateSide('y', 'rY', 'rightLeft', (PI / 2));
           console.log(camera.rotation);
@@ -313,21 +347,6 @@ class Practice2Cube extends React.Component {
 
           if (upDownLeftOrRight === 'down') {
             rotateSide('z', 'rZ', 'upDown', -(PI / 2));
-          }
-        }
-
-        if (info.face === 'y') {
-          if (whichAxis === 'x') {
-            rotateSide('z', 'rZ', 'upDown', (PI / 2));
-          }
-          if (whichAxis === '-x') {
-            rotateSide('z', 'rZ', 'upDown', -(PI / 2));
-          }
-          if (whichAxis === 'z') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2));
-          }
-          if (whichAxis === '-z') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2));
           }
         }
 
