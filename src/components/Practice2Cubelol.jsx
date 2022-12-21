@@ -162,21 +162,21 @@ class Practice2Cube extends React.Component {
     }
 
 
-    threeX = threeSpaceMouseLocOnMove.x - threeSpaceMouseLocOnDown.x;
-    threeY = threeSpaceMouseLocOnMove.y - threeSpaceMouseLocOnDown.y;
-    threeZ = threeSpaceMouseLocOnMove.z - threeSpaceMouseLocOnDown.z;
+    if (threeSpaceMouseLocOnDown) {
+      threeX = threeSpaceMouseLocOnMove.x - threeSpaceMouseLocOnDown.x;
+      threeZ = threeSpaceMouseLocOnMove.z - threeSpaceMouseLocOnDown.z;
 
-    if (threeY > highest) {
-      highest = threeY;
-      whichAxis = 'y';
-    }
-    if (threeZ > highest) {
-      highest = threeZ;
-      whichAxis = 'z';
-    }
+      if (Math.abs(threeZ) > Math.abs(threeX)) {
+        whichAxis = 'z';
+      } else {
+        whichAxis = 'x';
+      }
 
-    if (threeSpaceMouseLocOnMove[whichAxis] - threeSpaceMouseLocOnDown[whichAxis] < 0) {
-      whichAxis = '-' + whichAxis;
+      if (threeSpaceMouseLocOnMove[whichAxis] - threeSpaceMouseLocOnDown[whichAxis] < 0) {
+        whichAxis = '-' + whichAxis;
+      }
+
+      console.log('axis', whichAxis);
     }
 
   })
@@ -186,9 +186,15 @@ class Practice2Cube extends React.Component {
     var mouseLocOnDown = {x: null, y: null};
     var info;
     var threeSpaceMouseLocOnDown;
+    var positions;
+    var positionRay;
 
 
     window.addEventListener('mousedown', (event) => {
+
+      positionRay = new THREE.Raycaster();
+      getCubePositions(scene, positionRay);
+      positions = getCubePositions(scene, positionRay);
 
       if (mouseOnCube) {
         dontDoMouseUp = false;
@@ -225,9 +231,9 @@ class Practice2Cube extends React.Component {
         return;
       }
 
-      var positionRay = new THREE.Raycaster();
+      positionRay = new THREE.Raycaster();
       getCubePositions(scene, positionRay);
-      var positions = getCubePositions(scene, positionRay);
+      positions = getCubePositions(scene, positionRay);
 
       var history = [];
 
@@ -254,6 +260,7 @@ class Practice2Cube extends React.Component {
                 scene.attach(rotatoArr[i]);
               }
               scene.remove(rotato);
+              isAnimating = false;
             })
           tween1.onUpdate((object: {[rAxis]: number}, elapsed: number) => {
               rotato.rotation[axis] = object[rAxis];
@@ -306,6 +313,21 @@ class Practice2Cube extends React.Component {
 
           if (upDownLeftOrRight === 'down') {
             rotateSide('z', 'rZ', 'upDown', -(PI / 2));
+          }
+        }
+
+        if (info.face === 'y') {
+          if (whichAxis === 'x') {
+            rotateSide('z', 'rZ', 'upDown', (PI / 2));
+          }
+          if (whichAxis === '-x') {
+            rotateSide('z', 'rZ', 'upDown', -(PI / 2));
+          }
+          if (whichAxis === 'z') {
+            rotateSide('x', 'rX', 'upDown', (PI / 2));
+          }
+          if (whichAxis === '-z') {
+            rotateSide('x', 'rX', 'upDown', -(PI / 2));
           }
         }
 
