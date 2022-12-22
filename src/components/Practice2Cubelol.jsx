@@ -35,9 +35,6 @@ import singlecube25 from '../models/oneCubeObjToOrg25.gltf';
 import singlecube26 from '../models/oneCubeObjToOrg26.gltf';
 import { getCubePositions, getSlabs } from './helperFunctions';
 
-//add sounds
-
-
 // fix (0, 1, 0) shit with scene vs wholeCube group
 //function that takes in the click face and the rotation axis or right or left or whatever, then it rotates the with the information given
 
@@ -48,7 +45,7 @@ class Practice2Cube extends React.Component {
   }
 
   componentDidMount() {
-    let { abs, PI } = Math;
+    let { PI } = Math;
     var cubeSound = new Audio(sound);
     var cubeSound2 = new Audio(sound2);
     var cubeSound3 = new Audio(sound3);
@@ -99,7 +96,6 @@ class Practice2Cube extends React.Component {
   const sceneRaycaster = new THREE.Raycaster();
 
   var mouseOnCube = false;
-  // var mouseMoveDirection = {x: null, y: null};
   var leftOrRight = '';
   var upOrDown = '';
   var upDownLeftOrRight = '';
@@ -107,14 +103,45 @@ class Practice2Cube extends React.Component {
   var threeZ = '';
   var whichAxis = 'x';
   var history = [];
+  var thisThis = this;
 
   var dontDoMouseUp = false;
 
   var positionRay;
+  positionRay = new THREE.Raycaster();
+  var firstPositions;
 
   function rotateSide(axis, rAxis, side, angle, theSlab, time) {
-    history.push([axis, rAxis, side, angle * -1, theSlab, 200]);
-    positionRay = new THREE.Raycaster();
+
+    var same = true;
+    var argument = [axis, rAxis, side, angle, theSlab, 200]
+    if (history.length !== 0) {
+      for (let i = 0; i < argument.length; i++) {
+        console.log(argument[i], history[history.length - 1][i]);
+        if (i === 4) {
+          var sameCubes = true;
+          for (let j = 0; j < argument[j].length; j++) {
+            if (!history[history.length - 1][i].includes(argument[i][j])) {
+              sameCubes = false;
+            }
+          }
+          if (sameCubes) {
+            continue;
+          }
+        }
+        if (argument[i] !== history[history.length - 1][i]) {
+          same = false;
+        }
+      }
+      if (!same) {
+        history.push([axis, rAxis, side, angle * -1, theSlab, 200]);
+      } else {
+        history.pop();
+      }
+    } else {
+      history.push([axis, rAxis, side, angle * -1, theSlab, 200]);
+    }
+
     getCubePositions(scene, positionRay);
     positions = getCubePositions(scene, positionRay);
     var tween1;
@@ -141,11 +168,15 @@ class Practice2Cube extends React.Component {
         rotato.rotation[axis] = object[rAxis];
     })
     tween1.start();
+
+    var randomSound = [cubeSound, cubeSound2, cubeSound4, cubeSound3];
+    if (thisThis.props.sound) {
+      randomSound[Math.floor(Math.random() * (2 - 0 + 1) + 0)].play();
+    }
+
   }
 
   function solve() {
-    console.log(history);
-    console.log('solve');
     var j = history.length;
 
     function loopSolve () {
@@ -269,6 +300,9 @@ class Practice2Cube extends React.Component {
 
     window.addEventListener('mousedown', (event) => {
 
+      getCubePositions(scene, positionRay);
+      firstPositions = getCubePositions(scene, positionRay);
+
       positionRay = new THREE.Raycaster();
       getCubePositions(scene, positionRay);
       positions = getCubePositions(scene, positionRay);
@@ -309,7 +343,6 @@ class Practice2Cube extends React.Component {
       }, 50);
       setTimeout(() => {
         if (this.props.solveClicked) {
-          console.log('hello');
           solve();
         }
       }, 50);
@@ -322,7 +355,7 @@ class Practice2Cube extends React.Component {
 
         if (info.face === 'y') {
           if (whichAxis === 'x') {
-            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.righLeft.slab], 400);
+            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.rightLeft.slab], 400);
           }
           if (whichAxis === '-x') {
             rotateSide('z', 'rZ', 'rightLeft', (PI / 2), positions[info.rightLeft.slab], 400);
@@ -544,7 +577,6 @@ class Practice2Cube extends React.Component {
     // scene.add(scene);
     // scene.position.set(0, 1, 0);
 
-    console.log('SCENE CHILDREN', scene.children);
 
 ///////
 

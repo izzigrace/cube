@@ -26,25 +26,6 @@ class App extends React.Component {
     this.solve = this.solve.bind(this);
   }
 
-  // startAndStopTimer (event) {
-  //   event.preventDefault();
-  //   var timerInterval;
-  //   if (this.state.startTimer === true) {
-  //     timerInterval = setInterval(() => {
-  //       if (this.state.seconds === 59) {
-  //         this.setState({seconds: 0});
-  //         this.setState({minutes: this.state.minutes + 1});
-  //       }
-  //       this.setState({
-  //         seconds: this.state.seconds + 1
-  //       })
-  //     }, 1000);
-  //   }
-  //   if (this.state.startTimer === false) {
-  //     clearInterval(timerInterval);
-  //   }
-  // }
-
   timer (event) {
     // event.preventDefault();
     this.setState({startTimer: true});
@@ -139,7 +120,6 @@ class App extends React.Component {
             {timerButton}
           </div>
         </div>
-        {/* <Cube sound={this.state.playSound}/> */}
         <Practice2Cube shuffleClicked={this.state.shuffleClicked} solveClicked={this.state.solveClicked} sound={this.state.playSound} />
         {/* {modalPopUp} */}
       </div>
