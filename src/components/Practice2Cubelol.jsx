@@ -106,12 +106,14 @@ class Practice2Cube extends React.Component {
   var threeX = '';
   var threeZ = '';
   var whichAxis = 'x';
+  var history = [];
 
   var dontDoMouseUp = false;
 
   var positionRay;
 
   function rotateSide(axis, rAxis, side, angle, theSlab, time) {
+    history.push([axis, rAxis, side, angle * -1, theSlab, 200]);
     positionRay = new THREE.Raycaster();
     getCubePositions(scene, positionRay);
     positions = getCubePositions(scene, positionRay);
@@ -141,6 +143,31 @@ class Practice2Cube extends React.Component {
     tween1.start();
   }
 
+  function solve() {
+    console.log(history);
+    console.log('solve');
+    var j = history.length;
+
+    function loopSolve () {
+      j--;
+      // var positionRay = new THREE.Raycaster();
+      // getCubePositions(scene, positionRay);
+      // var positions = getCubePositions(scene, positionRay);
+
+      rotateSide(history[j][0],history[j][1], history[j][2], history[j][3], history[j][4], history[j][5]);
+
+
+      if (j > 0) {
+        setTimeout(() => {
+          loopSolve();
+        }, 250)
+      } else {
+        history = [];
+      }
+    }
+    loopSolve();
+
+  }
 
   function shuffle(history) {
     var randomSlab = [['x', 'rX', 'rightLeft', ['nx', 'x', 'px']], ['y', 'rY', 'rightLeft', ['ny', 'y', 'py']], ['z', 'rZ', 'upDown', ['nz', 'z', 'pz']]];
@@ -228,7 +255,6 @@ class Practice2Cube extends React.Component {
         whichAxis = '-' + whichAxis;
       }
 
-      console.log('axis', whichAxis);
     }
 
   })
@@ -281,8 +307,13 @@ class Practice2Cube extends React.Component {
           shuffle();
         }
       }, 50);
+      setTimeout(() => {
+        if (this.props.solveClicked) {
+          console.log('hello');
+          solve();
+        }
+      }, 50);
 
-      console.log('mouse up clicked', this.props.shuffleClicked);
       if (!dontDoMouseUp) {
         if (isAnimating) {
           return;
@@ -321,8 +352,6 @@ class Practice2Cube extends React.Component {
           isAnimating = false;
           return;
         }
-
-        console.log('return didnt work');
 
         if (upDownLeftOrRight === 'right') {
           rotateSide('y', 'rY', 'rightLeft', (PI / 2), positions[info.rightLeft.slab], 400);
@@ -369,8 +398,6 @@ class Practice2Cube extends React.Component {
             rotateSide('z', 'rZ', 'upDown', -(PI / 2), positions[info.upDown.slab], 400);
           }
         }
-
-      // console.log(upDownLeftOrRight);
 
     }
 
