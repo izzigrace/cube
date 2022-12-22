@@ -142,26 +142,61 @@ class Practice2Cube extends React.Component {
     })
     tween1.start();
   }
+  function rotateSideFast(axis, rAxis, side, angle, theSlab) {
+    console.log(axis, rAxis, side, angle, theSlab);
+    positionRay = new THREE.Raycaster();
+    getCubePositions(scene, positionRay);
+    positions = getCubePositions(scene, positionRay);
+    var tween1;
+    var rotato = new THREE.Group();
+    scene.attach(rotato);
+    var rotatoArr = [];
+
+    console.log('idk', theSlab);
+    for (let i = 0; i < theSlab.length; i++) {
+      rotato.attach(theSlab[i]);
+      rotatoArr.push(theSlab[i]);
+    }
+
+    tween1 = new TWEEN.Tween({[rAxis]: 0})
+      .to( {[rAxis]: angle}, 200)
+      .easing(TWEEN.Easing.Quintic.Out)
+      .onComplete(() => {
+        for (let i = 0; i < rotatoArr.length; i++) {
+          scene.attach(rotatoArr[i]);
+        }
+        scene.remove(rotato);
+        isAnimating = false;
+      })
+    tween1.onUpdate((object: {[rAxis]: number}, elapsed: number) => {
+        rotato.rotation[axis] = object[rAxis];
+    })
+    tween1.start();
+  }
 
   function shuffle(history) {
-    console.log('SHUFFLE');
     var randomSlab = [['x', 'rX', 'rightLeft', ['nx', 'x', 'px']], ['y', 'rY', 'rightLeft', ['ny', 'y', 'py']], ['z', 'rZ', 'upDown', ['nz', 'z', 'pz']]];
     var randomPosOrNeg = [1, -1];
 
     var i = 0;
 
-    while (i <= 20) {
-      setTimeout(() => {
-        var positionRay = new THREE.Raycaster();
-        getCubePositions(scene, positionRay);
-        var positions = getCubePositions(scene, positionRay);
-        var slab = randomSlab[Math.floor(Math.random() * (2 - 0 + 1) + 0)];
-        // console.log('whats going on', slab[3][Math.floor(Math.random() * (2 - 0 + 1) + 0)]);
+    function loop () {
+      i++
+      var positionRay = new THREE.Raycaster();
+      getCubePositions(scene, positionRay);
+      var positions = getCubePositions(scene, positionRay);
+      var slab = randomSlab[Math.floor(Math.random() * (2 - 0 + 1) + 0)];
 
-        rotateSide(slab[0], slab[1], slab[2], (PI / 2) * randomPosOrNeg[Math.floor(Math.random() * (1 - 0 + 1) + 0)], positions[slab[3][Math.floor(Math.random() * (2 - 0 + 1) + 0)]]);
-      }, 5000);
-      i++;
+      rotateSideFast(slab[0], slab[1], slab[2], (PI / 2) * randomPosOrNeg[Math.floor(Math.random() * (1 - 0 + 1) + 0)], positions[slab[3][Math.floor(Math.random() * (2 - 0 + 1) + 0)]]);
+
+      if (i < 30) {
+        setTimeout(() => {
+          loop();
+        }, 250)
+      }
     }
+    loop();
+
   }
   // if (this.props.shuffleClicked) {
   //   console.log('shuffle clicked');
