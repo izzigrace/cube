@@ -79,9 +79,10 @@ class App extends React.Component {
   shuffle (event) {
     event.preventDefault();
     this.setState({shuffleClicked: true});
-    // setTimeout(() => {
-    //   this.setState({shuffleClicked: false})
-    // }, 1000);
+    setTimeout(() => {
+      this.setState({shuffleClicked: false})
+      console.log(this.state.shuffleClicked);
+    }, 1000);
     console.log(this.state.shuffleClicked);
   }
 

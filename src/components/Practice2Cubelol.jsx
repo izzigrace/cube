@@ -111,8 +111,7 @@ class Practice2Cube extends React.Component {
 
   var positionRay;
 
-  function rotateSide(axis, rAxis, side, angle, theSlab) {
-    console.log(axis, rAxis, side, angle, theSlab);
+  function rotateSide(axis, rAxis, side, angle, theSlab, time) {
     positionRay = new THREE.Raycaster();
     getCubePositions(scene, positionRay);
     positions = getCubePositions(scene, positionRay);
@@ -121,14 +120,13 @@ class Practice2Cube extends React.Component {
     scene.attach(rotato);
     var rotatoArr = [];
 
-    console.log('idk', theSlab);
     for (let i = 0; i < theSlab.length; i++) {
       rotato.attach(theSlab[i]);
       rotatoArr.push(theSlab[i]);
     }
 
     tween1 = new TWEEN.Tween({[rAxis]: 0})
-      .to( {[rAxis]: angle}, 400)
+      .to( {[rAxis]: angle}, time)
       .easing(TWEEN.Easing.Quintic.Out)
       .onComplete(() => {
         for (let i = 0; i < rotatoArr.length; i++) {
@@ -142,37 +140,7 @@ class Practice2Cube extends React.Component {
     })
     tween1.start();
   }
-  function rotateSideFast(axis, rAxis, side, angle, theSlab) {
-    console.log(axis, rAxis, side, angle, theSlab);
-    positionRay = new THREE.Raycaster();
-    getCubePositions(scene, positionRay);
-    positions = getCubePositions(scene, positionRay);
-    var tween1;
-    var rotato = new THREE.Group();
-    scene.attach(rotato);
-    var rotatoArr = [];
 
-    console.log('idk', theSlab);
-    for (let i = 0; i < theSlab.length; i++) {
-      rotato.attach(theSlab[i]);
-      rotatoArr.push(theSlab[i]);
-    }
-
-    tween1 = new TWEEN.Tween({[rAxis]: 0})
-      .to( {[rAxis]: angle}, 200)
-      .easing(TWEEN.Easing.Quintic.Out)
-      .onComplete(() => {
-        for (let i = 0; i < rotatoArr.length; i++) {
-          scene.attach(rotatoArr[i]);
-        }
-        scene.remove(rotato);
-        isAnimating = false;
-      })
-    tween1.onUpdate((object: {[rAxis]: number}, elapsed: number) => {
-        rotato.rotation[axis] = object[rAxis];
-    })
-    tween1.start();
-  }
 
   function shuffle(history) {
     var randomSlab = [['x', 'rX', 'rightLeft', ['nx', 'x', 'px']], ['y', 'rY', 'rightLeft', ['ny', 'y', 'py']], ['z', 'rZ', 'upDown', ['nz', 'z', 'pz']]];
@@ -187,7 +155,7 @@ class Practice2Cube extends React.Component {
       var positions = getCubePositions(scene, positionRay);
       var slab = randomSlab[Math.floor(Math.random() * (2 - 0 + 1) + 0)];
 
-      rotateSideFast(slab[0], slab[1], slab[2], (PI / 2) * randomPosOrNeg[Math.floor(Math.random() * (1 - 0 + 1) + 0)], positions[slab[3][Math.floor(Math.random() * (2 - 0 + 1) + 0)]]);
+      rotateSide(slab[0], slab[1], slab[2], (PI / 2) * randomPosOrNeg[Math.floor(Math.random() * (1 - 0 + 1) + 0)], positions[slab[3][Math.floor(Math.random() * (2 - 0 + 1) + 0)]], 200);
 
       if (i < 30) {
         setTimeout(() => {
@@ -198,24 +166,11 @@ class Practice2Cube extends React.Component {
     loop();
 
   }
-  // if (this.props.shuffleClicked) {
-  //   console.log('shuffle clicked');
-  //   shuffle();
-  // }
-  setTimeout(() => {
-    // console.log('settimeout');
-    // positionRay = new THREE.Raycaster();
-    // getCubePositions(scene, positionRay);
-    // positions = getCubePositions(scene, positionRay);
-    // console.log('positions', positions.py);
-
-    // rotateSide('z', 'rZ', 'upDown', (PI / 2), positions.pz);
-    shuffle();
-  }, 500);
 
   var threeSpaceMouseLocOnMove;
 
   window.addEventListener('mousemove', (event) => {
+
     //seeing if mouse is over cube, disabling orbit controls if it is
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -321,41 +276,47 @@ class Practice2Cube extends React.Component {
     const raycaster = new THREE.Raycaster();
 
     window.addEventListener('mouseup', (event) => {
+      setTimeout(() => {
+        if (this.props.shuffleClicked) {
+          shuffle();
+        }
+      }, 50);
+
       console.log('mouse up clicked', this.props.shuffleClicked);
       if (!dontDoMouseUp) {
-      if (isAnimating) {
-        return;
-      }
+        if (isAnimating) {
+          return;
+        }
         isAnimating = true;
 
         if (info.face === 'y') {
           if (whichAxis === 'x') {
-            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.righLeft.slab]);
+            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.righLeft.slab], 400);
           }
           if (whichAxis === '-x') {
-            rotateSide('z', 'rZ', 'rightLeft', (PI / 2), positions[info.rightLeft.slab]);
+            rotateSide('z', 'rZ', 'rightLeft', (PI / 2), positions[info.rightLeft.slab], 400);
           }
           if (whichAxis === 'z') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab], 400);
           }
           if (whichAxis === '-z') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab], 400);
           }
           isAnimating = false;
           return;
         }
         if (info.face === '-y') {
           if (whichAxis === 'x') {
-            rotateSide('z', 'rZ', 'rightLeft', (PI / 2), positions[info.rightLeft.slab]);
+            rotateSide('z', 'rZ', 'rightLeft', (PI / 2), positions[info.rightLeft.slab], 400);
           }
           if (whichAxis === '-x') {
-            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.rightLeft.slab]);
+            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.rightLeft.slab], 400);
           }
           if (whichAxis === 'z') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab], 400);
           }
           if (whichAxis === '-z') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab], 400);
           }
           isAnimating = false;
           return;
@@ -364,48 +325,48 @@ class Practice2Cube extends React.Component {
         console.log('return didnt work');
 
         if (upDownLeftOrRight === 'right') {
-          rotateSide('y', 'rY', 'rightLeft', (PI / 2), positions[info.rightLeft.slab]);
+          rotateSide('y', 'rY', 'rightLeft', (PI / 2), positions[info.rightLeft.slab], 400);
         }
 
         if (upDownLeftOrRight === 'left') {
-          rotateSide('y', 'rY', 'rightLeft', -(PI / 2), positions[info.rightLeft.slab]);
+          rotateSide('y', 'rY', 'rightLeft', -(PI / 2), positions[info.rightLeft.slab], 400);
         }
 
         if (info.face === 'z') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab], 400);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab], 400);
           }
         }
         if (info.face === '-z') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab], 400);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab], 400);
           }
         }
 
         if (info.face === '-x') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('z', 'rZ', 'upDown', -(PI / 2), positions[info.upDown.slab]);
+            rotateSide('z', 'rZ', 'upDown', -(PI / 2), positions[info.upDown.slab], 400);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('z', 'rZ', 'upDown', (PI / 2), positions[info.upDown.slab]);
+            rotateSide('z', 'rZ', 'upDown', (PI / 2), positions[info.upDown.slab], 400);
           }
         }
         if (info.face === 'x') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('z', 'rZ', 'upDown', (PI / 2), positions[info.upDown.slab]);
+            rotateSide('z', 'rZ', 'upDown', (PI / 2), positions[info.upDown.slab], 400);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('z', 'rZ', 'upDown', -(PI / 2), positions[info.upDown.slab]);
+            rotateSide('z', 'rZ', 'upDown', -(PI / 2), positions[info.upDown.slab], 400);
           }
         }
 
