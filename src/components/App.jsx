@@ -15,11 +15,13 @@ class App extends React.Component {
       modal: false,
       seconds: 0,
       minutes: 0,
-      playSound: true
+      playSound: true,
+      shuffleClicked: false
     }
     this.timer = this.timer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
     this.sound = this.sound.bind(this);
+    this.shuffle = this.shuffle.bind(this);
   }
 
   // startAndStopTimer (event) {
@@ -74,6 +76,15 @@ class App extends React.Component {
     this.setState({playSound: (!this.state.playSound)});
   }
 
+  shuffle (event) {
+    event.preventDefault();
+    this.setState({shuffleClicked: true});
+    // setTimeout(() => {
+    //   this.setState({shuffleClicked: false})
+    // }, 1000);
+    console.log(this.state.shuffleClicked);
+  }
+
 
   render() {
     var timerButton;
@@ -110,7 +121,7 @@ class App extends React.Component {
     return (
       <div className={style.app} >
         <div className={style.allButtons}>
-          <button className={style.shuffle}>SHUFFLE</button>
+          <button className={style.shuffle} onClick={this.shuffle}>SHUFFLE</button>
           <button className={style.solve}>SOLVE</button>
           <button className={style.soundButton} onClick={this.sound}>{soundButtonName}</button>
           <div className={style.timeAndButtonContainer}>
@@ -119,7 +130,7 @@ class App extends React.Component {
           </div>
         </div>
         {/* <Cube sound={this.state.playSound}/> */}
-        <Practice2Cube />
+        <Practice2Cube shuffleClicked={this.state.shuffleClicked} sound={this.state.playSound} />
         {/* {modalPopUp} */}
       </div>
     )

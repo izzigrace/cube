@@ -104,17 +104,79 @@ class Practice2Cube extends React.Component {
   var upOrDown = '';
   var upDownLeftOrRight = '';
   var threeX = '';
-  var threeY = '';
   var threeZ = '';
-
-  var highest = threeX;
   var whichAxis = 'x';
 
   var dontDoMouseUp = false;
 
-  function shuffle(history) {
+  var positionRay;
 
+  function rotateSide(axis, rAxis, side, angle, theSlab) {
+    console.log(axis, rAxis, side, angle, theSlab);
+    positionRay = new THREE.Raycaster();
+    getCubePositions(scene, positionRay);
+    positions = getCubePositions(scene, positionRay);
+    var tween1;
+    var rotato = new THREE.Group();
+    scene.attach(rotato);
+    var rotatoArr = [];
+
+    console.log('idk', theSlab);
+    for (let i = 0; i < theSlab.length; i++) {
+      rotato.attach(theSlab[i]);
+      rotatoArr.push(theSlab[i]);
+    }
+
+    tween1 = new TWEEN.Tween({[rAxis]: 0})
+      .to( {[rAxis]: angle}, 400)
+      .easing(TWEEN.Easing.Quintic.Out)
+      .onComplete(() => {
+        for (let i = 0; i < rotatoArr.length; i++) {
+          scene.attach(rotatoArr[i]);
+        }
+        scene.remove(rotato);
+        isAnimating = false;
+      })
+    tween1.onUpdate((object: {[rAxis]: number}, elapsed: number) => {
+        rotato.rotation[axis] = object[rAxis];
+    })
+    tween1.start();
   }
+
+  function shuffle(history) {
+    console.log('SHUFFLE');
+    var randomSlab = [['x', 'rX', 'rightLeft', ['nx', 'x', 'px']], ['y', 'rY', 'rightLeft', ['ny', 'y', 'py']], ['z', 'rZ', 'upDown', ['nz', 'z', 'pz']]];
+    var randomPosOrNeg = [1, -1];
+
+    var i = 0;
+
+    while (i <= 20) {
+      setTimeout(() => {
+        var positionRay = new THREE.Raycaster();
+        getCubePositions(scene, positionRay);
+        var positions = getCubePositions(scene, positionRay);
+        var slab = randomSlab[Math.floor(Math.random() * (2 - 0 + 1) + 0)];
+        // console.log('whats going on', slab[3][Math.floor(Math.random() * (2 - 0 + 1) + 0)]);
+
+        rotateSide(slab[0], slab[1], slab[2], (PI / 2) * randomPosOrNeg[Math.floor(Math.random() * (1 - 0 + 1) + 0)], positions[slab[3][Math.floor(Math.random() * (2 - 0 + 1) + 0)]]);
+      }, 5000);
+      i++;
+    }
+  }
+  // if (this.props.shuffleClicked) {
+  //   console.log('shuffle clicked');
+  //   shuffle();
+  // }
+  setTimeout(() => {
+    // console.log('settimeout');
+    // positionRay = new THREE.Raycaster();
+    // getCubePositions(scene, positionRay);
+    // positions = getCubePositions(scene, positionRay);
+    // console.log('positions', positions.py);
+
+    // rotateSide('z', 'rZ', 'upDown', (PI / 2), positions.pz);
+    shuffle();
+  }, 500);
 
   var threeSpaceMouseLocOnMove;
 
@@ -187,7 +249,6 @@ class Practice2Cube extends React.Component {
     var info;
     var threeSpaceMouseLocOnDown;
     var positions;
-    var positionRay;
 
 
     window.addEventListener('mousedown', (event) => {
@@ -225,76 +286,41 @@ class Practice2Cube extends React.Component {
     const raycaster = new THREE.Raycaster();
 
     window.addEventListener('mouseup', (event) => {
+      console.log('mouse up clicked', this.props.shuffleClicked);
       if (!dontDoMouseUp) {
       if (isAnimating) {
         return;
       }
-
-      positionRay = new THREE.Raycaster();
-      getCubePositions(scene, positionRay);
-      positions = getCubePositions(scene, positionRay);
-
-      var history = [];
-
-
-      function rotateSlab(info, history) {
         isAnimating = true;
-
-        function rotateSide(axis, rAxis, side, angle) {
-          var tween1;
-          var rotato = new THREE.Group();
-          scene.attach(rotato);
-          var rotatoArr = [];
-
-          for (let i = 0; i < positions[info[side].slab].length; i++) {
-            rotato.attach(positions[info[side].slab][i]);
-            rotatoArr.push(positions[info[side].slab][i]);
-          }
-
-          tween1 = new TWEEN.Tween({[rAxis]: 0})
-            .to( {[rAxis]: angle}, 400)
-            .easing(TWEEN.Easing.Quintic.Out)
-            .onComplete(() => {
-              for (let i = 0; i < rotatoArr.length; i++) {
-                scene.attach(rotatoArr[i]);
-              }
-              scene.remove(rotato);
-              isAnimating = false;
-            })
-          tween1.onUpdate((object: {[rAxis]: number}, elapsed: number) => {
-              rotato.rotation[axis] = object[rAxis];
-          })
-          tween1.start();
-        }
 
         if (info.face === 'y') {
           if (whichAxis === 'x') {
-            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2));
+            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.righLeft.slab]);
           }
           if (whichAxis === '-x') {
-            rotateSide('z', 'rZ', 'rightLeft', (PI / 2));
+            rotateSide('z', 'rZ', 'rightLeft', (PI / 2), positions[info.rightLeft.slab]);
           }
           if (whichAxis === 'z') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2));
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
           }
           if (whichAxis === '-z') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2));
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
           }
           isAnimating = false;
           return;
         }
         if (info.face === '-y') {
           if (whichAxis === 'x') {
-            rotateSide('z', 'rZ', 'rightLeft', (PI / 2));
+            rotateSide('z', 'rZ', 'rightLeft', (PI / 2), positions[info.rightLeft.slab]);
           }
           if (whichAxis === '-x') {
-            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2));
+            rotateSide('z', 'rZ', 'rightLeft', -(PI / 2), positions[info.rightLeft.slab]);
           }
           if (whichAxis === 'z') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2));
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
           }
           if (whichAxis === '-z') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2));
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
           }
           isAnimating = false;
           return;
@@ -303,73 +329,59 @@ class Practice2Cube extends React.Component {
         console.log('return didnt work');
 
         if (upDownLeftOrRight === 'right') {
-          rotateSide('y', 'rY', 'rightLeft', (PI / 2));
-          console.log(camera.rotation);
+          rotateSide('y', 'rY', 'rightLeft', (PI / 2), positions[info.rightLeft.slab]);
         }
 
         if (upDownLeftOrRight === 'left') {
-          rotateSide('y', 'rY', 'rightLeft', -(PI / 2));
-          console.log(scene.children);
+          rotateSide('y', 'rY', 'rightLeft', -(PI / 2), positions[info.rightLeft.slab]);
         }
 
         if (info.face === 'z') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2));
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2));
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
           }
         }
         if (info.face === '-z') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('x', 'rX', 'upDown', (PI / 2));
+            rotateSide('x', 'rX', 'upDown', (PI / 2), positions[info.upDown.slab]);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('x', 'rX', 'upDown', -(PI / 2));
+            rotateSide('x', 'rX', 'upDown', -(PI / 2), positions[info.upDown.slab]);
           }
         }
 
         if (info.face === '-x') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('z', 'rZ', 'upDown', -(PI / 2));
+            rotateSide('z', 'rZ', 'upDown', -(PI / 2), positions[info.upDown.slab]);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('z', 'rZ', 'upDown', (PI / 2));
+            rotateSide('z', 'rZ', 'upDown', (PI / 2), positions[info.upDown.slab]);
           }
         }
         if (info.face === 'x') {
           if (upDownLeftOrRight === 'up') {
-            rotateSide('z', 'rZ', 'upDown', (PI / 2));
+            rotateSide('z', 'rZ', 'upDown', (PI / 2), positions[info.upDown.slab]);
           }
 
           if (upDownLeftOrRight === 'down') {
-            rotateSide('z', 'rZ', 'upDown', -(PI / 2));
+            rotateSide('z', 'rZ', 'upDown', -(PI / 2), positions[info.upDown.slab]);
           }
         }
 
-
-      }
-
-      rotateSlab(info, history);
-
-
       // console.log(upDownLeftOrRight);
-
 
     }
 
-    isAnimating = false;
+      isAnimating = false;
     })
 
-
-    //make group of mini cubes
-    // const scene = new THREE.Group();
     //start of rendering TWENTY SEVEN CUBES
-
-
     function loadGltfs () {
       const gltfLoader = new GLTFLoader();
       gltfLoader.load(singlecube1, function(gltf) {
