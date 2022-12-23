@@ -1,4 +1,17 @@
 .solved {
+  position: fixed;
+  background-image: url('https://i.gifer.com/6ob.gif');
+  width: 500px;
+  height: 500px;
+  /* margin-left: auto;
+  margin-right: auto; */
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.solvedWord {
   color: green;
-  position: absolute
+  text-align: center;
 }

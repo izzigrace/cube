@@ -7,8 +7,9 @@ html, body {
 }
 
 .allButtons {
-  position: relative;
+  position: absolute;
   z-index: 500;
+  width: 100%
 }
 
 .shuffle {
@@ -49,3 +50,7 @@ html, body {
   background: none;
   border: none;
 }
+
+/* .cubeComponent {
+  position: absolute;
+} */

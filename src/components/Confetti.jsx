@@ -10,7 +10,7 @@ class Confetti extends React.Component {
   render() {
     var confetti;
     if (this.props.solved) {
-      confetti = <div className='solved'>SOLVED</div>
+      confetti = <div className='solved'><div className='solvedWord'>SOLVED</div></div>
     } else {
       confetti = <div></div>
     }

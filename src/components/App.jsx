@@ -1,6 +1,5 @@
 import React from 'react';
 import Cube from './Cube.jsx';
-import Practice2Cube from './Practice2Cubelol.jsx';
 import style from './App.module.css';
 // import gradientLeft from '../pics/1.png';
 // import gradientRight from '../pics/2.png';
@@ -120,7 +119,7 @@ class App extends React.Component {
             {timerButton}
           </div>
         </div>
-        <Practice2Cube className='cubeComponent' shuffleClicked={this.state.shuffleClicked} solveClicked={this.state.solveClicked} sound={this.state.playSound} />
+        <Cube className='cubeComponent' shuffleClicked={this.state.shuffleClicked} solveClicked={this.state.solveClicked} sound={this.state.playSound} />
         {/* {modalPopUp} */}
       </div>
     )
