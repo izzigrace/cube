@@ -435,6 +435,17 @@ var isItSolved = function(scene, rayCaster) {
   makeRay(-2, 5, 2, '', 0, -1, 0, arr3);
   makeRay(-2, 5, -2, '', 0, -1, 0, arr3);
 
+  var arr4 = [];
+  makeRay(0, 2, -5, '', 0, 0, 1, arr4);
+  makeRay(0, 0, -5, '', 0, 0, 1, arr4);
+  makeRay(0, -2, -5, '', 0, 0, 1, arr4);
+  makeRay(2, 2, -5, '', 0, 0, 1, arr4);
+  makeRay(2, 0, -5, '', 0, 0, 1, arr4);
+  makeRay(2, -2, -5, '', 0, 0, 1, arr4);
+  makeRay(-2, 2, -5, '', 0, 0, 1, arr4);
+  makeRay(-2, 0, -5, '', 0, 0, 1, arr4);
+  makeRay(-2, -2, -5, '', 0, 0, 1, arr4);
+
   var arr1first = arr1[0];
   for (let i = 0; i < arr1.length; i++) {
     if (arr1[i] !== arr1first) {
@@ -450,6 +461,12 @@ var isItSolved = function(scene, rayCaster) {
   var arr3first = arr3[0];
   for (let i = 0; i < arr3.length; i++) {
     if (arr3[i] !== arr3first) {
+      solved = false;
+    }
+  }
+  var arr4first = arr4[0];
+  for (let i = 0; i < arr4.length; i++) {
+    if (arr4[i] !== arr4first) {
       solved = false;
     }
   }
