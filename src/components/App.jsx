@@ -120,7 +120,7 @@ class App extends React.Component {
             {timerButton}
           </div>
         </div>
-        <Practice2Cube shuffleClicked={this.state.shuffleClicked} solveClicked={this.state.solveClicked} sound={this.state.playSound} />
+        <Practice2Cube className='cubeComponent' shuffleClicked={this.state.shuffleClicked} solveClicked={this.state.solveClicked} sound={this.state.playSound} />
         {/* {modalPopUp} */}
       </div>
     )

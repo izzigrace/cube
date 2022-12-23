@@ -33,15 +33,16 @@ import singlecube23 from '../models/oneCubeObjToOrg23.gltf';
 import singlecube24 from '../models/oneCubeObjToOrg24.gltf';
 import singlecube25 from '../models/oneCubeObjToOrg25.gltf';
 import singlecube26 from '../models/oneCubeObjToOrg26.gltf';
-import { getCubePositions, getSlabs } from './helperFunctions';
+import { getCubePositions, getSlabs, isItSolved } from './helperFunctions';
+import './Cube.css';
+import Confetti from './Confetti.jsx';
 
 // fix (0, 1, 0) shit with scene vs wholeCube group
-//function that takes in the click face and the rotation axis or right or left or whatever, then it rotates the with the information given
 
 class Practice2Cube extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {solved: false};
   }
 
   componentDidMount() {
@@ -77,9 +78,8 @@ class Practice2Cube extends React.Component {
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.enableRotate = true;
-    // controls.minPolarAngle = Math.PI / 2;
-    // controls.maxPolarAngle = Math.PI / 2;
     controls.autoRotate = false;
+
 
     //handles window resizing
     function onWindowResize (event) {
@@ -93,23 +93,22 @@ class Practice2Cube extends React.Component {
     window.addEventListener('resize', onWindowResize, false);
 
 
-  const sceneRaycaster = new THREE.Raycaster();
+    const sceneRaycaster = new THREE.Raycaster();
 
-  var mouseOnCube = false;
-  var leftOrRight = '';
-  var upOrDown = '';
-  var upDownLeftOrRight = '';
-  var threeX = '';
-  var threeZ = '';
-  var whichAxis = 'x';
-  var history = [];
-  var thisThis = this;
+    var mouseOnCube = false;
+    var leftOrRight = '';
+    var upOrDown = '';
+    var upDownLeftOrRight = '';
+    var threeX = '';
+    var threeZ = '';
+    var whichAxis = 'x';
+    var history = [];
+    var thisThis = this;
 
-  var dontDoMouseUp = false;
+    var dontDoMouseUp = false;
 
-  var positionRay;
-  positionRay = new THREE.Raycaster();
-  var firstPositions;
+    var positionRay;
+    positionRay = new THREE.Raycaster();
 
   function rotateSide(axis, rAxis, side, angle, theSlab, time) {
 
@@ -117,7 +116,6 @@ class Practice2Cube extends React.Component {
     var argument = [axis, rAxis, side, angle, theSlab, 200]
     if (history.length !== 0) {
       for (let i = 0; i < argument.length; i++) {
-        console.log(argument[i], history[history.length - 1][i]);
         if (i === 4) {
           var sameCubes = true;
           for (let j = 0; j < argument[j].length; j++) {
@@ -174,6 +172,17 @@ class Practice2Cube extends React.Component {
       randomSound[Math.floor(Math.random() * (2 - 0 + 1) + 0)].play();
     }
 
+    setTimeout(() => {
+      var solvingRay = new THREE.Raycaster();
+      if (isItSolved(scene, solvingRay)) {
+        thisThis.setState({solved: true});
+        console.log(thisThis.state.solved);
+        setTimeout(() => {
+          thisThis.setState({solved: false});
+        }, 5000)
+      }
+    }, 300);
+
   }
 
   function solve() {
@@ -186,7 +195,6 @@ class Practice2Cube extends React.Component {
       // var positions = getCubePositions(scene, positionRay);
 
       rotateSide(history[j][0],history[j][1], history[j][2], history[j][3], history[j][4], history[j][5]);
-
 
       if (j > 0) {
         setTimeout(() => {
@@ -299,9 +307,6 @@ class Practice2Cube extends React.Component {
 
 
     window.addEventListener('mousedown', (event) => {
-
-      getCubePositions(scene, positionRay);
-      firstPositions = getCubePositions(scene, positionRay);
 
       positionRay = new THREE.Raycaster();
       getCubePositions(scene, positionRay);
@@ -578,18 +583,9 @@ class Practice2Cube extends React.Component {
     // scene.position.set(0, 1, 0);
 
 
-///////
-
-//if it gets stuck when looking at the very bottom it could be that the raycasters in the very middle for the z slab are getting in the way? like the mouse is touching the ray so it thinks mouse is over cube? idk
-
-
     function animate(time) {
       requestAnimationFrame( animate );
       TWEEN.update(time);
-
-      if (isAnimating) {
-      } else {
-      }
 
       controls.update();
       renderer.render( scene, camera );
@@ -600,7 +596,7 @@ class Practice2Cube extends React.Component {
   render() {
     return (
       <div>
-
+        <Confetti solved={this.state.solved} />
       </div>
     )
   }

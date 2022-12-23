@@ -392,4 +392,70 @@ var getSlabs = function (scene, mouse, camera, raycaster) {
 
 }
 
-export { getCubePositions, getSlabs }
+var isItSolved = function(scene, rayCaster) {
+  var solved = true;
+
+  function makeRay(one, two, three, spacer, x, y, z, array) {
+    rayCaster.ray.origin.copy(new THREE.Vector3(one, two, three));
+    rayCaster.ray.direction.copy({x: x, y: y, z: z});
+    var intersectsRay = rayCaster.intersectObject(scene, true);
+    array.push(intersectsRay[0].object.material.color.r);
+  }
+
+  var arr1 = [];
+  makeRay(-5, 2, 2, '', 1, 0, 0, arr1);
+  makeRay(-5, 2, 0, '', 1, 0, 0, arr1);
+  makeRay(-5, 2, -2, '', 1, 0, 0, arr1);
+  makeRay(-5, 0, 2, '', 1, 0, 0, arr1);
+  makeRay(-5, 0, 0, '', 1, 0, 0, arr1);
+  makeRay(-5, 0, -2, '', 1, 0, 0, arr1);
+  makeRay(-5, -2, 2, '', 1, 0, 0, arr1);
+  makeRay(-5, -2, 0, '', 1, 0, 0, arr1);
+  makeRay(-5, -2, -2, '', 1, 0, 0, arr1);
+
+  var arr2 = [];
+  makeRay(5, 2, 2, '', -1, 0, 0, arr2);
+  makeRay(5, 2, 0, '', -1, 0, 0, arr2);
+  makeRay(5, 2, -2, '', -1, 0, 0, arr2);
+  makeRay(5, 0, 2, '', -1, 0, 0, arr2);
+  makeRay(5, 0, 0, '', -1, 0, 0, arr2);
+  makeRay(5, 0, -2, '', -1, 0, 0, arr2);
+  makeRay(5, -2, 2, '', -1, 0, 0, arr2);
+  makeRay(5, -2, 0, '', -1, 0, 0, arr2);
+  makeRay(5, -2, -2, '', -1, 0, 0, arr2);
+
+  var arr3 = [];
+  makeRay(0, 5, 2, '', 0, -1, 0, arr3);
+  makeRay(0, 5, 0, '', 0, -1, 0, arr3);
+  makeRay(0, 5, -2, '', 0, -1, 0, arr3);
+  makeRay(2, 5, 0, '', 0, -1, 0, arr3);
+  makeRay(2, 5, 2, '', 0, -1, 0, arr3);
+  makeRay(-2, 5, 0, '', 0, -1, 0, arr3);
+  makeRay(2, 5, -2, '', 0, -1, 0, arr3);
+  makeRay(-2, 5, 2, '', 0, -1, 0, arr3);
+  makeRay(-2, 5, -2, '', 0, -1, 0, arr3);
+
+  var arr1first = arr1[0];
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr1first) {
+      solved = false;
+    }
+  }
+  var arr2first = arr2[0];
+  for (let i = 0; i < arr2.length; i++) {
+    if (arr2[i] !== arr2first) {
+      solved = false;
+    }
+  }
+  var arr3first = arr3[0];
+  for (let i = 0; i < arr3.length; i++) {
+    if (arr3[i] !== arr3first) {
+      solved = false;
+    }
+  }
+
+  return solved;
+
+}
+
+export { getCubePositions, getSlabs, isItSolved }
