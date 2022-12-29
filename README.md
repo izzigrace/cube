@@ -18,6 +18,6 @@ Fully rotatable sides
 Shuffle functionality
 ![shuffle](https://user-images.githubusercontent.com/103616900/209929540-c5129423-6a9b-4f37-bc25-a29a47c44516.gif)
 
-Solve functionality
+And solve functionality!
 ![solve](https://user-images.githubusercontent.com/103616900/209929593-c947771a-d127-4ee0-9edd-338e3bd9990f.gif)
 
