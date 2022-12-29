@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 
 function getCubePositions(scene, positionRay) {
+  //takes in the scene and ray and returns an array of all cubes in every slab. positive x slab, positive y, etc
   var positions = {px: [], py: [], pz: [], x: [], y: [], z: [], nx: [], ny: [], nz: []};
-  var intersectsAssignRay
+  var intersectsAssignRay;
 
 //positive x slab
   positionRay.ray.origin.copy(new THREE.Vector3(2, 5, 2));
   positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
   intersectsAssignRay = positionRay.intersectObject(scene, true);
 
+  //casting a ray directed toward position of the first cube in the positive x slab, and adding the cube that the ray hit
   for (let i = 0; i < intersectsAssignRay.length; i++) {
     if (!positions.px.includes(intersectsAssignRay[i].object.parent.parent)) {
       positions.px.push(intersectsAssignRay[i].object.parent.parent)
@@ -295,13 +297,16 @@ function getCubePositions(scene, positionRay) {
 }
 
 var getSlabs = function (scene, mouse, camera, raycaster) {
+  //returns face clicked, which slab and needs to be moved and which axis it needs to rotate on if user slides up or down, and which slab needs to be moved and which axis it needs to rotate on if user slides left or right
+
   var info = {face: '', upDown: {slab: '', rotate: ''}, rightLeft: {slab: '', rotate: ''}};
 
+  //casting a ray and seeing the position of the cube it hit
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObject(scene);
   var facePoint = intersects[0].point;
-  console.log('facepoint', facePoint);
 
+  //seeing which face was clicked. after getting the absolute value of x, y, and z on the position vector of the clicked cube, the highest of the three will tell which axis the clicked face is on. then if that axis in the cube's position vector is negative, we can add a negative to our face, giving us which face of the cube was clicked
   var highest = [facePoint.x, 'x'];
   if (Math.abs(facePoint.y) > Math.abs(highest[0])) {
     highest = [facePoint.y, 'y'];
@@ -314,8 +319,8 @@ var getSlabs = function (scene, mouse, camera, raycaster) {
   } else {
     info.face = '-' + highest[1];
   }
-  console.log(info.face);
 
+  //depending on the face clicked and cube point clicked, we can add the corresponding slabs to our object to be used later when doing our rotation animation
   if (info.face === 'x' || info.face === '-x') {
     if (facePoint.z < -1) {
       info.upDown.slab = 'nz';
@@ -393,8 +398,11 @@ var getSlabs = function (scene, mouse, camera, raycaster) {
 }
 
 var isItSolved = function(scene, rayCaster) {
+  //returns true if cube is solved, false if not
+
   var solved = true;
 
+  //casting a ray at every cube on a shared face to see if all the colors are the same. repeating this 4 times to check 4 sides, if the 4 sides' 9 cubes each have the same color, the cube is solved and variable solved stays true. else, solve becomes false.
   function makeRay(one, two, three, spacer, x, y, z, array) {
     rayCaster.ray.origin.copy(new THREE.Vector3(one, two, three));
     rayCaster.ray.direction.copy({x: x, y: y, z: z});

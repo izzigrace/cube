@@ -48,7 +48,6 @@ class App extends React.Component {
 
   stopTimer (event) {
     // event.preventDefault();
-    console.log(this);
     this.setState({startTimer: false});
     this.setState({modal: true});
   }
@@ -63,7 +62,6 @@ class App extends React.Component {
     this.setState({shuffleClicked: true});
     setTimeout(() => {
       this.setState({shuffleClicked: false})
-      console.log(this.state.shuffleClicked);
     }, 1000);
   }
 

@@ -37,8 +37,6 @@ import { getCubePositions, getSlabs, isItSolved } from './helperFunctions';
 import './Cube.css';
 import Confetti from './Confetti.jsx';
 
-// fix (0, 1, 0) shit with scene vs wholeCube group
-
 class Cube extends React.Component {
   constructor(props) {
     super(props);
@@ -111,9 +109,12 @@ class Cube extends React.Component {
     positionRay = new THREE.Raycaster();
 
   function rotateSide(axis, rAxis, side, angle, theSlab, time) {
+    //takes in the rotation axis, the same axis with an r in front of it (needed for tween), whether the slab is the rightLeft one or upDown one, poitive or negative (PI / 2) for a positive or negative rotation, which slab to rotate, and how fast to rotate it (i chose to rotate the sides a lot faster during shuffle and solve to save time)
 
     var same = true;
-    var argument = [axis, rAxis, side, angle, theSlab, 200]
+    var argument = [axis, rAxis, side, angle, theSlab, 200];
+
+    //checking to see if the move that was just made is the opposite of the one before it. if it is, i dont push it to the moves history array, and i pop the most recent move off of the moves history. this makes it so if you make a move in the right direction, it will not be redone in the solving function
     if (history.length !== 0) {
       for (let i = 0; i < argument.length; i++) {
         if (i === 4) {
@@ -147,11 +148,13 @@ class Cube extends React.Component {
     scene.attach(rotato);
     var rotatoArr = [];
 
+    //push all cubes that need to rotate into an array, and attach them to a rotation group
     for (let i = 0; i < theSlab.length; i++) {
       rotato.attach(theSlab[i]);
       rotatoArr.push(theSlab[i]);
     }
 
+    //rotate group using tween.js, then once complete go through rotation array and reattach them to scene, and delete group
     tween1 = new TWEEN.Tween({[rAxis]: 0})
       .to( {[rAxis]: angle}, time)
       .easing(TWEEN.Easing.Quintic.Out)
@@ -172,11 +175,11 @@ class Cube extends React.Component {
       randomSound[Math.floor(Math.random() * (2 - 0 + 1) + 0)].play();
     }
 
+    //seeing if cube is solved, and setting state to reflect solved state so the confetti animation can play on solve
     setTimeout(() => {
       var solvingRay = new THREE.Raycaster();
       if (isItSolved(scene, solvingRay)) {
         thisThis.setState({solved: true});
-        console.log(thisThis.state.solved);
         setTimeout(() => {
           thisThis.setState({solved: false});
         }, 3000)
@@ -186,13 +189,11 @@ class Cube extends React.Component {
   }
 
   function solve() {
+    //going through history array and calling rotation function on the contents of each inner array every 250 miliseconds
     var j = history.length;
 
     function loopSolve () {
       j--;
-      // var positionRay = new THREE.Raycaster();
-      // getCubePositions(scene, positionRay);
-      // var positions = getCubePositions(scene, positionRay);
 
       rotateSide(history[j][0],history[j][1], history[j][2], history[j][3], history[j][4], history[j][5]);
 
@@ -209,6 +210,7 @@ class Cube extends React.Component {
   }
 
   function shuffle(history) {
+    //calling rotation function on a random slab and random rotation every 250 miliseconds 30 times
     var randomSlab = [['x', 'rX', 'rightLeft', ['nx', 'x', 'px']], ['y', 'rY', 'rightLeft', ['ny', 'y', 'py']], ['z', 'rZ', 'upDown', ['nz', 'z', 'pz']]];
     var randomPosOrNeg = [1, -1];
 

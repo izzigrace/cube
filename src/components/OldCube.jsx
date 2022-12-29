@@ -1,4 +1,4 @@
-//this file can be ignored. this project was an assignment for Hack Reactor; we were given 2 days to do any project we wanted but i didnt finish completey how i invisioned. I wanted to keep this to look back on what i could do in a few days when i was first learning to make apps, so this is all kind of not my best code and isnt used or displayed on the screen. the main file is Cube.jsx
+//this file can be ignored. this project was an assignment for Hack Reactor; we were given 2 days to do any project we wanted but i didnt finish completey how i invisioned. I wanted to keep this to look back on what i could do in a few days/a week (i started a little early) when i was first learning to make apps, so this is all kind of not my best code and isnt used or displayed on the screen. the main file is Cube.jsx
 
 
 import React from 'react';
