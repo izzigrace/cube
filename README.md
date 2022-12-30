@@ -2,9 +2,14 @@
 
 An interactive and solveable Rubik's inspired 3d cube. Includes a timer and shuffle/solve buttons.
 
-In the project directory, you can run:
+## Getting Started
+In your terminal, you can run:
 
-### `npm start`
+### `$ git clone https://github.com/izzigrace/cube.git
+$ cd cube
+$ npm install
+$ npm run build
+$ npm start`
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ## Application Overview
