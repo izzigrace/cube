@@ -4,7 +4,7 @@ An interactive and solveable Rubik's inspired 3d cube. Includes a timer and shuf
 
 ## Getting Started
 
-Open [http://35.87.73.159:3000/) to view it in your browser.
+Open http://35.87.73.159:3000/ to view it in your browser.
 
 
 ## Application Overview
