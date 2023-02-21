@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+//this is a file that contains helper functions for one of my projects: a functional, 3D rubiks cube inspired game built with react and three.js. These functions are used in the main cube component to help with the rotation of sides
+
 function getCubePositions(scene, positionRay) {
   //takes in the scene and ray, and returns an object with arrays of all cubes in every slab. positive x slab (px), negative y (ny), etc. helpful to know what cubes are in each position, so when i want to rotate a certain slab i can access all the cubes that need to be rotated, using this object.
 
@@ -294,6 +296,8 @@ function getCubePositions(scene, positionRay) {
   }
 
   return positions;
+
+  //would want to optimize in the future to not have so much repeating code
 
 }
 
