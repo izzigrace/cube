@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 
 function getCubePositions(scene, positionRay) {
-  //takes in the scene and ray and returns an array of all cubes in every slab. positive x slab, positive y, etc
+  //takes in the scene and ray, and returns an object with arrays of all cubes in every slab. positive x slab (px), negative y (ny), etc. helpful to know what cubes are in each position, so when i want to rotate a certain slab i can access all the cubes that need to be rotated, using this object.
+
   var positions = {px: [], py: [], pz: [], x: [], y: [], z: [], nx: [], ny: [], nz: []};
   var intersectsAssignRay;
 
@@ -10,7 +11,7 @@ function getCubePositions(scene, positionRay) {
   positionRay.ray.direction.copy({x: 0, y: -1, z: 0});
   intersectsAssignRay = positionRay.intersectObject(scene, true);
 
-  //casting a ray directed toward position of the first cube in the positive x slab, and adding the cube that the ray hit
+  //casting a ray directed toward position of the first cube in the positive x slab, and adding the cube that the ray hit to the px array
   for (let i = 0; i < intersectsAssignRay.length; i++) {
     if (!positions.px.includes(intersectsAssignRay[i].object.parent.parent)) {
       positions.px.push(intersectsAssignRay[i].object.parent.parent)
@@ -38,7 +39,7 @@ function getCubePositions(scene, positionRay) {
   }
 
 
-// positive y slab
+// repeating for positive y slab
   positionRay.ray.origin.copy(new THREE.Vector3(5, 2, 2));
   positionRay.ray.direction.copy({x: -1, y: 0, z: 0});
   intersectsAssignRay = positionRay.intersectObject(scene, true);
@@ -297,7 +298,7 @@ function getCubePositions(scene, positionRay) {
 }
 
 var getSlabs = function (scene, mouse, camera, raycaster) {
-  //returns face clicked, which slab and needs to be moved and which axis it needs to rotate on if user slides up or down, and which slab needs to be moved and which axis it needs to rotate on if user slides left or right
+  //returns face clicked, which slab and needs to be rotated and which axis it needs to rotate on if user slides up or down, and which slab needs to be moved and which axis it needs to rotate on if user slides left or right. this is helpful for laying out all slab/rotation possibilities when a user clicks somewhere on the cube
 
   var info = {face: '', upDown: {slab: '', rotate: ''}, rightLeft: {slab: '', rotate: ''}};
 
